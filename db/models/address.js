@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Address.init(
     {
-      name: DataTypes.STRING,
+      location: DataTypes.TEXT,
       userId: {
         type: DataTypes.INTEGER,
         references: {

@@ -10,31 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       address_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
           model: "addresses",
           key: "id",
         },
       },
-      status: {
-        type: Sequelize.STRING,
-      },
-      buyer_id: {
+      status_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "users",
-          key: "id",
-        },
-      },
-      product_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "products",
-          key: "id",
-        },
-      },
-      date: {
-        type: Sequelize.DATE,
+        references: { model: "statuses", key: "id" },
       },
       created_at: {
         allowNull: false,

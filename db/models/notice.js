@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Notice.init(
     {
-      title: DataTypes.STRING,
-      detail: DataTypes.STRING,
+      title: DataTypes.TEXT,
+      detail: DataTypes.TEXT,
     },
     {
       sequelize,

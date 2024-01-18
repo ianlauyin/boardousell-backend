@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       detail: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       created_at: {
         allowNull: false,

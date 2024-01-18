@@ -2,11 +2,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("reviews", {
+    await queryInterface.createTable("product_orders", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      amount: {
         type: Sequelize.INTEGER,
       },
       product_id: {
@@ -16,16 +19,10 @@ module.exports = {
           key: "id",
         },
       },
-      rating: {
-        type: Sequelize.INTEGER,
-      },
-      detail: {
-        type: Sequelize.TEXT,
-      },
-      user_id: {
+      order_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: "users",
+          model: "orders",
           key: "id",
         },
       },
@@ -40,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("reviews");
+    await queryInterface.dropTable("product_orders");
   },
 };
