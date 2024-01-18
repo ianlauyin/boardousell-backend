@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "levels",
+      modelName: "level",
       underscored: true,
     }
   );
