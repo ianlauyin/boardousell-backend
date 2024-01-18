@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.productorder);
       this.belongsTo(models.status);
       this.belongsToMany(models.product, { through: models.productorder });
-      this.belongsTo(models.user);
     }
   }
   Order.init(
@@ -21,13 +20,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         references: {
           model: "addresses",
-          key: "id",
-        },
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "users",
           key: "id",
         },
       },

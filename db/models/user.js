@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.wishlist);
       this.hasMany(models.review);
       this.belongsTo(models.level);
-      this.hasMany(models.order);
     }
   }
   User.init(

@@ -18,21 +18,18 @@ module.exports = {
         {
           address_id: 1,
           status_id: 1,
-          user_id: 1,
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
           address_id: 2,
           status_id: 2,
-          user_id: 3,
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
           address_id: 3,
           status_id: 3,
-          user_id: 2,
           created_at: new Date(),
           updated_at: new Date(),
         },
