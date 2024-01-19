@@ -12,25 +12,14 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("levels", [
+    await queryInterface.bulkInsert("newproducts", [
       {
-        title: "basic",
-        requirement: 0,
-        discount: 1,
+        product_id: 1,
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        title: "standard",
-        requirement: 5000,
-        discount: 0.9,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        title: "premium",
-        requirement: 10000,
-        discount: 0.8,
+        product_id: 2,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -44,6 +33,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete(`levels`, null, {});
+    await queryInterface.bulkDelete("newproducts", null, {});
   },
 };

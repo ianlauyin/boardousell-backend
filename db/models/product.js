@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.wishlist);
       this.hasMany(models.review);
       this.belongsToMany(models.category, { through: "product_categories" });
+      this.hasOne(models.newproduct);
+      this.hasOne(models.onsale);
     }
   }
   Product.init(

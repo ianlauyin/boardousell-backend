@@ -14,27 +14,27 @@ module.exports = {
      */
     await queryInterface.bulkInsert(`categories`, [
       {
-        name: "strategy",
+        name: "Strategy",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "party game",
+        name: "Party game",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "cooperative game",
+        name: "Cooperative game",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "hand management",
+        name: "Hand management",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "hidden roles",
+        name: "Hidden roles",
         created_at: new Date(),
         updated_at: new Date(),
       },
