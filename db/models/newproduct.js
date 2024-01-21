@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "new",
+      modelName: "newproduct",
       underscored: true,
     }
   );
