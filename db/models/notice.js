@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Notice.init(
     {
       title: DataTypes.TEXT,
+      url: DataTypes.STRING,
       detail: DataTypes.TEXT,
     },
     {

@@ -15,6 +15,7 @@ module.exports = {
     await queryInterface.bulkInsert("notices", [
       {
         title: "New Year Sales!",
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2Fistockphoto-1486111092-612x612.jpg?alt=media&token=65fde69c-a297-4419-8e9f-2d80e2ae1d17",
         detail:
           "Happy New Year, everyone. We are giving out new year sales discount on certain boardgame. Please take a look and Have Fun!",
         created_at: new Date("2024-01-01T07:00:00"),
