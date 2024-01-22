@@ -38,6 +38,16 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        name: "Player Elimination",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        name: "Dice Rolling",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

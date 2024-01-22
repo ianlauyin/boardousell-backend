@@ -7,6 +7,10 @@ class ProductRouter {
   }
 
   routes() {
+    router.get(
+      "/newProduct",
+      this.controller.getNewProduct.bind(this.controller)
+    );
     return router;
   }
 }
