@@ -2,12 +2,22 @@ class ProductController {
   constructor(db) {
     this.product = db.product;
     this.newproduct = db.newproduct;
+    this.productPhoto = db.productPhoto;
   }
 
   getNewProduct = async (req, res) => {
     try {
-      const newProduct = await this.newproduct.findAll({
-        include: this.product,
+      const newProduct = await this.product.findAll({
+        include: [
+          {
+            model: this.newproduct,
+            required: true,
+          },
+          {
+            model: this.productPhoto,
+            limit: 1,
+          },
+        ],
       });
       return res.json(newProduct);
     } catch (error) {
