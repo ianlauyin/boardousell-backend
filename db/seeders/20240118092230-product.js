@@ -58,6 +58,42 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        price: 700,
+        name: "Mansions of Madness",
+        description:
+          "Unravel mysteries in Arkham with your investigative team in this app-guided game",
+        stocks: 0,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        price: 200,
+        name: "Welcome to...",
+        description:
+          "Design the most appealing 1950s neighborhood, with fences, parks, and swimming pools.",
+        stocks: 15,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        price: 380,
+        name: "Bullet♥︎",
+        description:
+          "Space heroines defend Planet Earth in falling-block battles.",
+        stocks: 15,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        price: 380,
+        name: "Zombicide",
+        description:
+          "Work together to kill zombies! Improve skills! Then kill more zombies!",
+        stocks: 15,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

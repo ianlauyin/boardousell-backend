@@ -79,6 +79,60 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        product_id: 6,
+        category_id: 4,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 6,
+        category_id: 3,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 6,
+        category_id: 7,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 7,
+        category_id: 8,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 8,
+        category_id: 3,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 9,
+        category_id: 3,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 9,
+        category_id: 4,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 9,
+        category_id: 6,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 9,
+        category_id: 7,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

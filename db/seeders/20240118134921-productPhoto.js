@@ -49,6 +49,24 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        product_id: 6,
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/product%2F91ZGULlSMwS._AC_SL1500_.jpg?alt=media&token=157c474b-974e-4ef7-b855-3a3edc92913a",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 7,
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/product%2Fpic3761012.jpg?alt=media&token=67b3e13e-7c96-4641-863d-2b40208030ca",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        product_id: 9,
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/product%2Fpic1196191.jpg?alt=media&token=d388f820-f7ff-420c-bef8-bc409e3a6c5e",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
