@@ -8,13 +8,16 @@ class ProductController {
   getNewProduct = async (req, res) => {
     try {
       const newProduct = await this.product.findAll({
+        attributes: ["price", "name", "stocks"],
         include: [
           {
+            attributes: [],
             model: this.newproduct,
             required: true,
           },
           {
             model: this.productPhoto,
+            attributes: ["url"],
             limit: 1,
           },
         ],
