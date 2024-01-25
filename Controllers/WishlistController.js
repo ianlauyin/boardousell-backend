@@ -6,7 +6,7 @@ class WishlistController {
   }
 
   getWishlists = async (req, res) => {
-    const { userEmail } = req.body;
+    const { userEmail } = req.params;
     try {
       const user = await this.user.findOne({ where: { email: userEmail } });
       const wishlists = await user.getWishlists({
