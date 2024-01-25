@@ -25,8 +25,16 @@ module.exports = {
         title: "New Boardgames Arrived!",
         detail:
           "New Boardgames have arrived at our shop. Including Bullet!, Blackout, Tiny Town. Please have a look to these new boardgames and Have Fun!.",
-        created_at: new Date(),
-        updated_at: new Date(),
+        created_at: new Date("2024-01-10T07:00:00"),
+        updated_at: new Date("2024-01-10T07:00:00"),
+      },
+      {
+        title: "Chinese New Year Sales",
+        detail:
+          "Happy Chinese New Year, everyone. We are giving out new year sales discount on certain boardgame. Please take a look and Have Fun!",
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2F8155740.jpg?alt=media&token=dd7d817c-cdef-482f-9e8b-41f538d3ccd0",
+        created_at: new Date("2024-01-25T07:00:00"),
+        updated_at: new Date("2024-01-25T07:00:00"),
       },
     ]);
   },

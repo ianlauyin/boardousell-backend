@@ -8,6 +8,7 @@ class NoticeController {
       const newestNotices = await this.notice.findAll({
         order: [["updated_at", "DESC"]],
         limit: 3,
+        attributes: ["title", "url"],
       });
       return res.json(newestNotices);
     } catch (error) {
