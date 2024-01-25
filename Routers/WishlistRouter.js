@@ -7,6 +7,7 @@ class WishlistRouter {
   }
 
   routes() {
+    router.get(`/`, this.controller.getWishlists.bind(this.controller));
     return router;
   }
 }
