@@ -8,7 +8,8 @@ class ProductController {
   getNewProduct = async (req, res) => {
     try {
       const newProduct = await this.product.findAll({
-        attributes: ["price", "name", "stocks"],
+        order: [["created_at", "DESC"]],
+        attributes: ["id", "price", "name", "stocks"],
         include: [
           {
             attributes: [],
