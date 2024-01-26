@@ -6,9 +6,9 @@ class WishlistController {
   }
 
   getWishlists = async (req, res) => {
-    const { userEmail } = req.params;
+    const { userId } = req.params;
     try {
-      const user = await this.user.findOne({ where: { email: userEmail } });
+      const user = await this.user.findByPk(userId);
       const wishlists = await user.getWishlists({
         attributes: ["id"],
         include: [{ model: this.product, attributes: ["name", "stocks"] }],
@@ -18,6 +18,15 @@ class WishlistController {
       return res.status(400).json({ error: true, msg: error });
     }
   };
+
+  //   addWishItem = async (req,res)=>{
+  //     const {userEmail,productId } = req.body
+  //     try{
+  //       await this.wishlist.create({})
+  //     }catch(error){
+  //       return res.status(400).json({error:true,msg:error})
+  //     }
+  //   }
 }
 
 module.exports = WishlistController;

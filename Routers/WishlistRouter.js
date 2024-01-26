@@ -7,10 +7,7 @@ class WishlistRouter {
   }
 
   routes() {
-    router.get(
-      `/:userEmail`,
-      this.controller.getWishlists.bind(this.controller)
-    );
+    router.get(`/:userId`, this.controller.getWishlists.bind(this.controller));
     return router;
   }
 }
