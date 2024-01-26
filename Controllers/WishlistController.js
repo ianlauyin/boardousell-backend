@@ -19,14 +19,30 @@ class WishlistController {
     }
   };
 
-  //   addWishItem = async (req,res)=>{
-  //     const {userEmail,productId } = req.body
-  //     try{
-  //       await this.wishlist.create({})
-  //     }catch(error){
-  //       return res.status(400).json({error:true,msg:error})
-  //     }
-  //   }
+  addWishItem = async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+      const newItem = await this.wishlist.create({
+        userId,
+        productId,
+      });
+      return res.json(newItem);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  deleteWishItem = async (req, res) => {
+    const { wishlistId } = req.body;
+    try {
+      const testing = await this.wishlist.destroy({
+        where: { id: wishlistId },
+      });
+      return res.json(testing);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 }
 
 module.exports = WishlistController;
