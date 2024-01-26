@@ -22,10 +22,15 @@ class WishlistController {
   addWishItem = async (req, res) => {
     const { userId, productId } = req.body;
     try {
-      const newItem = await this.wishlist.create({
+      const wishItem = await this.wishlist.create({
         userId,
         productId,
       });
+      const newItem = await this.wishlist.findByPk(wishItem.id, {
+        attributes: ["id"],
+        include: [{ model: this.product, attributes: ["name", "stocks"] }],
+      });
+
       return res.json(newItem);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
