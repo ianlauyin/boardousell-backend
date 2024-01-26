@@ -10,7 +10,7 @@ class WishlistController {
     try {
       const user = await this.user.findOne({ where: { email: userEmail } });
       const wishlists = await user.getWishlists({
-        attributes: [],
+        attributes: ["id"],
         include: [{ model: this.product, attributes: ["name", "stocks"] }],
       });
       return res.json(wishlists);
