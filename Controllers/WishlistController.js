@@ -33,7 +33,7 @@ class WishlistController {
   };
 
   deleteWishItem = async (req, res) => {
-    const { wishlistId } = req.body;
+    const { wishlistId } = req.params;
     try {
       const testing = await this.wishlist.destroy({
         where: { id: wishlistId },
