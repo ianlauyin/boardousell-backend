@@ -7,6 +7,7 @@ class CartRouter {
   }
 
   routes() {
+    router.get("/:userId", this.controller.getCart.bind(this.controller));
     return router;
   }
 }
