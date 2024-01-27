@@ -15,7 +15,7 @@ module.exports = {
     await queryInterface.bulkInsert("addresses", [
       {
         location: "Sha Tin",
-        user_id: 1,
+        user_id: 4,
         created_at: new Date(),
         updated_at: new Date(),
       },

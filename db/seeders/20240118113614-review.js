@@ -25,7 +25,7 @@ module.exports = {
         product_id: 2,
         rating: 4,
         detail: "So many systems in this game, variant possibility.",
-        user_id: 1,
+        user_id: 3,
         created_at: new Date(),
         updated_at: new Date(),
       },
