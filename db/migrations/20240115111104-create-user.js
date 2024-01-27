@@ -28,7 +28,7 @@ module.exports = {
       phone: {
         type: Sequelize.INTEGER,
       },
-      isAdmin: {
+      is_admin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },

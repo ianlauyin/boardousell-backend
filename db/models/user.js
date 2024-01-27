@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       points: DataTypes.INTEGER,
       phone: DataTypes.INTEGER,
-      isAdmin: DataTypes.BOOLEAN,
+      isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
       sequelize,

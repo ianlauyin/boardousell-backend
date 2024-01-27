@@ -19,7 +19,7 @@ module.exports = {
         level_id: 1,
         points: 0,
         phone: 88888888,
-        isAdmin: true,
+        is_admin: true,
         created_at: new Date(),
         updated_at: new Date(),
       },
