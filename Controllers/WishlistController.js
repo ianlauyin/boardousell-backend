@@ -11,7 +11,9 @@ class WishlistController {
       const user = await this.user.findByPk(userId);
       const wishlists = await user.getWishlists({
         attributes: ["id"],
-        include: [{ model: this.product, attributes: ["name", "stocks"] }],
+        include: [
+          { model: this.product, attributes: ["name", "stocks", "price"] },
+        ],
       });
       return res.json(wishlists);
     } catch (error) {
@@ -28,7 +30,9 @@ class WishlistController {
       });
       const newItem = await this.wishlist.findByPk(wishItem.id, {
         attributes: ["id"],
-        include: [{ model: this.product, attributes: ["name", "stocks"] }],
+        include: [
+          { model: this.product, attributes: ["name", "stocks", "price"] },
+        ],
       });
 
       return res.json(newItem);
