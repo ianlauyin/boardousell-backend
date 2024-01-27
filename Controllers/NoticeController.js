@@ -7,7 +7,7 @@ class NoticeController {
     try {
       const allNotices = await this.notice.findAll({
         order: [["created_at", "DESC"]],
-        attributes: ["id", "title", "created_at"],
+        attributes: ["id", "title", "createdAt"],
       });
       return res.json(allNotices);
     } catch (error) {
