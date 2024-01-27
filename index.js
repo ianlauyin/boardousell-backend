@@ -46,6 +46,11 @@ const WishlistController = require("./Controllers/WishlistController");
 const wishlistController = new WishlistController(db);
 const wishlistRouter = new WishlistRouter(wishlistController).routes();
 
+const CartRouter = require("./Routers/CartRouter");
+const CartController = require("./Controllers/CartController");
+const cartController = new CartController(db);
+const cartRouter = new CartRouter(cartController).routes();
+
 app.use(cors());
 app.use(express.json());
 app.use("/category", categoryRouter);
@@ -56,6 +61,7 @@ app.use("/product", productRouter);
 app.use("/review", reviewRouter);
 app.use("/user", userRouter);
 app.use("/wishlist", wishlistRouter);
+app.use("/cart", cartRouter);
 
 app.listen(port, () => {
   console.log(`listening on port${port}`);
