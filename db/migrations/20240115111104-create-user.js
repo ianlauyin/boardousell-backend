@@ -28,6 +28,10 @@ module.exports = {
       phone: {
         type: Sequelize.INTEGER,
       },
+      isAdmin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

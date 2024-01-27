@@ -14,6 +14,16 @@ module.exports = {
      */
     await queryInterface.bulkInsert("users", [
       {
+        email: "admin@admin.com",
+        name: "admin",
+        level_id: 1,
+        points: 0,
+        phone: 88888888,
+        isAdmin: true,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
         email: "test@test.com",
         name: "Test Ting",
         level_id: 1,
