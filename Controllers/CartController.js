@@ -12,7 +12,10 @@ class CartController {
       const cart = await user.getCarts({
         attributes: ["id"],
         include: [
-          { model: this.product, attributes: ["name", "stocks", "price"] },
+          {
+            model: this.product,
+            attributes: ["id", "name", "stocks", "price"],
+          },
         ],
       });
       return res.json(cart);
@@ -31,7 +34,10 @@ class CartController {
       const newItem = await this.cart.findByPk(cartItem.id, {
         attributes: ["id"],
         include: [
-          { model: this.product, attributes: ["name", "stocks", "price"] },
+          {
+            model: this.product,
+            attributes: ["id", "name", "stocks", "price"],
+          },
         ],
       });
 
