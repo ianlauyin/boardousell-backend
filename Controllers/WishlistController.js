@@ -40,10 +40,10 @@ class WishlistController {
   deleteWishItem = async (req, res) => {
     const { wishlistId } = req.params;
     try {
-      const testing = await this.wishlist.destroy({
+      await this.wishlist.destroy({
         where: { id: wishlistId },
       });
-      return res.json(testing);
+      return res.json("Deleted");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

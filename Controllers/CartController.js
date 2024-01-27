@@ -20,6 +20,38 @@ class CartController {
       return res.status(400).json({ error: true, msg: error });
     }
   };
+
+  addCartItem = async (req, res) => {
+    const { userId, productId } = req.body;
+    try {
+      const cartItem = await this.cart.create({
+        userId,
+        productId,
+      });
+      const newItem = await this.cart.findByPk(cartItem.id, {
+        attributes: ["id"],
+        include: [
+          { model: this.product, attributes: ["name", "stocks", "price"] },
+        ],
+      });
+
+      return res.json(newItem);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  deleteCartItem = async (req, res) => {
+    const { cartId } = req.params;
+    try {
+      await this.cart.destroy({
+        where: { id: cartId },
+      });
+      return res.json("Deleted");
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 }
 
 module.exports = CartController;
