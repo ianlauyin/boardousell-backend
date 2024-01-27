@@ -7,7 +7,6 @@ class NoticeController {
     try {
       const allNotices = await this.notice.findAll({
         order: [["created_at", "DESC"]],
-        attributes: ["id", "title", "createdAt"],
       });
       return res.json(allNotices);
     } catch (error) {
@@ -23,16 +22,6 @@ class NoticeController {
         attributes: ["id", "title", "url"],
       });
       return res.json(newestNotices);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  getOneNotice = async (req, res) => {
-    const { noticeId } = req.params;
-    try {
-      const noticeDetail = await this.notice.findByPk(noticeId);
-      return res.json(noticeDetail);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

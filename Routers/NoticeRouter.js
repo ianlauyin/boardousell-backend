@@ -7,10 +7,6 @@ class NoticeRouter {
   }
 
   routes() {
-    router.get(
-      "/noticeDetail/:noticeId",
-      this.controller.getOneNotice.bind(this.controller)
-    );
     router.get("/", this.controller.getAllNotices.bind(this.controller));
     router.get(
       "/newest",
