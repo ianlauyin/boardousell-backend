@@ -51,6 +51,11 @@ const CartController = require("./Controllers/CartController");
 const cartController = new CartController(db);
 const cartRouter = new CartRouter(cartController).routes();
 
+const InfomationRouter = require("./Routers/InfomationRouter");
+const InfomationController = require("./Controllers/InfomationController");
+const infomationController = new InfomationController(db);
+const infomationRouter = new InfomationRouter(infomationController).routes();
+
 app.use(cors());
 app.use(express.json());
 app.use("/category", categoryRouter);
@@ -62,6 +67,7 @@ app.use("/review", reviewRouter);
 app.use("/user", userRouter);
 app.use("/wishlist", wishlistRouter);
 app.use("/cart", cartRouter);
+app.use("/infomation", infomationRouter);
 
 app.listen(port, () => {
   console.log(`listening on port${port}`);
