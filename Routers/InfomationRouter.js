@@ -7,6 +7,7 @@ class InfomationRouter {
   }
 
   routes() {
+    router.get(`/`, this.controller.getAllInfo.bind(this.controller));
     return router;
   }
 }

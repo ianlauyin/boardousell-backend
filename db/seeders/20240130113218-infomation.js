@@ -14,25 +14,25 @@ module.exports = {
      */
     await queryInterface.bulkInsert(`infomations`, [
       {
-        name: "phone",
-        detail: "57030374",
+        name: "Phone",
+        detail: "12345678",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "link",
+        name: "Link",
         detail: "www.google.com",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "email",
-        detail: "ianlauyin@gmail.com",
+        name: "Email",
+        detail: "boardousell@boardousell.com",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "map",
+        name: "Map",
         detail: "觀塘巧明工業大廈88樓8A室",
         created_at: new Date(),
         updated_at: new Date(),
