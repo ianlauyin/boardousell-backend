@@ -38,6 +38,11 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        condition: "ready in store",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
