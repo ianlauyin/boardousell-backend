@@ -5,7 +5,6 @@ class InfomationController {
   getAllInfo = async (req, res) => {
     try {
       const allInfo = await this.infomation.findAll({
-        group: ["name", "detail"],
         attributes: ["name", "detail"],
       });
       return res.json(allInfo);

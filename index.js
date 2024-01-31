@@ -11,11 +11,6 @@ const CategoryController = require("./Controllers/CategoryController");
 const categoryController = new CategoryController(db);
 const categoryRouter = new CategoryRouter(categoryController).routes();
 
-const AddressRouter = require("./Routers/AddressRouter");
-const AddressController = require("./Controllers/AddressController");
-const addressController = new AddressController(db);
-const addressRouter = new AddressRouter(addressController).routes();
-
 const NoticeRouter = require("./Routers/NoticeRouter");
 const NoticeController = require("./Controllers/NoticeController");
 const noticeController = new NoticeController(db);
@@ -59,7 +54,6 @@ const infomationRouter = new InfomationRouter(infomationController).routes();
 app.use(cors());
 app.use(express.json());
 app.use("/category", categoryRouter);
-app.use("/address", addressRouter);
 app.use("/notice", noticeRouter);
 app.use("/order", orderRouter);
 app.use("/product", productRouter);

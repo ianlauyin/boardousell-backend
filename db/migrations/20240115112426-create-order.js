@@ -9,12 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      address_id: {
+      address: {
+        type: Sequelize.TEXT,
+      },
+      user_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "addresses",
-          key: "id",
-        },
+        references: { model: "users", key: "id" },
       },
       status_id: {
         type: Sequelize.INTEGER,
