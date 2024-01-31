@@ -20,6 +20,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: "statuses", key: "id" },
       },
+      amount: {
+        type: Sequelize.INTEGER,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

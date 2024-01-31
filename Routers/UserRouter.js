@@ -7,6 +7,7 @@ class UserRouter {
   }
 
   routes() {
+    router.get(`/:userId`, this.controller.getUserInfo.bind(this.controller));
     return router;
   }
 }
