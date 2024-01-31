@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       requirement: DataTypes.INTEGER,
-      discount: DataTypes.INTEGER,
+      discount: DataTypes.FLOAT,
     },
     {
       sequelize,

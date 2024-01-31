@@ -17,7 +17,7 @@ module.exports = {
         },
       },
       discount: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
       },
       created_at: {
         allowNull: false,

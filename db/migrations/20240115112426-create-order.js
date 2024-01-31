@@ -16,12 +16,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: "users", key: "id" },
       },
-      status_id: {
-        type: Sequelize.INTEGER,
-        references: { model: "statuses", key: "id" },
+      status: {
+        type: Sequelize.STRING,
       },
       amount: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
       },
       created_at: {
         allowNull: false,

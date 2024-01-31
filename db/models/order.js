@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.productorder);
-      this.belongsTo(models.status);
       this.belongsToMany(models.product, { through: models.productorder });
       this.belongsTo(models.user);
     }
@@ -17,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       address: DataTypes.TEXT,
-      amount: DataTypes.INTEGER,
+      amount: DataTypes.FLOAT,
       userId: {
         type: DataTypes.INTEGER,
         references: {
@@ -25,13 +24,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      statusId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "statuses",
-          key: "id",
-        },
-      },
+      status: DataTypes.STRING,
     },
     {
       sequelize,
