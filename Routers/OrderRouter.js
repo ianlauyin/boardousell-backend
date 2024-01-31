@@ -7,6 +7,8 @@ class OrderRouter {
   }
 
   routes() {
+    router.get(`/:orderId`, this.controller.getOrder.bind(this.controller));
+    router.post(`/`, this.controller.postOrder.bind(this.controller));
     return router;
   }
 }

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       address: DataTypes.TEXT,
       amount: DataTypes.FLOAT,
+      status: DataTypes.STRING,
       userId: {
         type: DataTypes.INTEGER,
         references: {
@@ -24,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      status: DataTypes.STRING,
     },
     {
       sequelize,
