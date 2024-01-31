@@ -4,6 +4,7 @@ class OrderController {
     this.cart = db.cart;
   }
 
+  //Not Finsihed
   getOrder = async (req, res) => {
     const { orderId } = req.params;
     try {
@@ -27,7 +28,10 @@ class OrderController {
         userId,
         amount,
       });
-      return res.json(newOrder);
+      for (const [id, number] of Object.entries(product)) {
+        await newOrder.addProducts(id, { through: { amount: number } });
+      }
+      return res.json(newOrder.id);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "productPhoto",
+      tableName: "product_photos",
       underscored: true,
     }
   );
