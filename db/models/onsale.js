@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Onsale.init(
     {
-      product_id: {
+      productId: {
         type: DataTypes.INTEGER,
         references: { model: "products", key: "id" },
       },
@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "onsale",
+      underscored: true,
     }
   );
   return Onsale;

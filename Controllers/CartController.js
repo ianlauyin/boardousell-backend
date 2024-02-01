@@ -3,6 +3,7 @@ class CartController {
     this.cart = db.cart;
     this.product = db.product;
     this.user = db.user;
+    this.onsale = db.onsale;
   }
 
   getCart = async (req, res) => {
@@ -15,6 +16,7 @@ class CartController {
           {
             model: this.product,
             attributes: ["id", "name", "stocks", "price"],
+            include: { model: this.onsale, attributes: ["discount"] },
           },
         ],
       });

@@ -21,7 +21,7 @@ module.exports = {
       },
       {
         product_id: 2,
-        discount: 0.9,
+        discount: 0.8,
         created_at: new Date(),
         updated_at: new Date(),
       },
