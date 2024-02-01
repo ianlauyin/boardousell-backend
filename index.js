@@ -51,6 +51,11 @@ const InfomationController = require("./Controllers/InfomationController");
 const infomationController = new InfomationController(db);
 const infomationRouter = new InfomationRouter(infomationController).routes();
 
+const MessageRouter = require("./Routers/MessageRouter");
+const MessageController = require("./Controllers/MessageController");
+const messageController = new MessageController(db);
+const messageRouter = new MessageRouter(messageController).routes();
+
 app.use(cors());
 app.use(express.json());
 app.use("/category", categoryRouter);
@@ -62,6 +67,7 @@ app.use("/user", userRouter);
 app.use("/wishlist", wishlistRouter);
 app.use("/cart", cartRouter);
 app.use("/infomation", infomationRouter);
+app.use("/message", messageRouter);
 
 app.listen(port, () => {
   console.log(`listening on port${port}`);

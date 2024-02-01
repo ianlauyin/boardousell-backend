@@ -27,7 +27,7 @@ class OrderController {
             attributes: ["id", "name"],
             through: { attributes: ["amount"] },
           },
-          { model: this.message, attributes: { exclude: ["id", "orderId"] } },
+          { model: this.message, attributes: { exclude: ["orderId"] } },
         ],
       });
       return res.json(order);
