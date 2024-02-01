@@ -1,8 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+app.use(cors());
+app.use(express.json());
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_KEY);
+app.post("/payment", async (req, res) => {
+  const { amount } = req.body;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: "hkd",
+  });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
 const port = process.env.PORT;
 const db = require("./db/models/index");
 
@@ -55,9 +68,6 @@ const MessageRouter = require("./Routers/MessageRouter");
 const MessageController = require("./Controllers/MessageController");
 const messageController = new MessageController(db);
 const messageRouter = new MessageRouter(messageController).routes();
-
-app.use(cors());
-app.use(express.json());
 app.use("/category", categoryRouter);
 app.use("/notice", noticeRouter);
 app.use("/order", orderRouter);

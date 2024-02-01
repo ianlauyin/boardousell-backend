@@ -9,6 +9,30 @@ class OrderController {
     this.message = db.message;
   }
 
+  paidOrder = async (req, res) => {
+    const { orderId } = req.body;
+    try {
+      const order = await this.order.findByPk(orderId);
+      if (order.status !== "Pending") {
+        throw new Error("User have already paid this order");
+      }
+      await order.update({ status: "Paid" });
+      const user = await this.user.findByPk(order.userId, {
+        include: this.level,
+      });
+      const newPoints = user.points + order.amount;
+      await user.update({
+        points: newPoints,
+        ...(newPoints >= user.level.requirement && {
+          levelId: user.levelId + 1,
+        }),
+      });
+      return res.json("Success");
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error.message });
+    }
+  };
+
   getOrder = async (req, res) => {
     const { orderId } = req.params;
     try {
@@ -57,7 +81,7 @@ class OrderController {
       }
       const newOrder = await this.order.create({
         address,
-        status: "pending",
+        status: "Pending",
         userId,
         amount,
       });
