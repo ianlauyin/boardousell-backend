@@ -12,12 +12,8 @@ class OrderController {
     const { orderId } = req.params;
     try {
       const order = await this.order.findByPk(orderId, {
+        attributes: { exclude: ["id", "userId"] },
         include: [
-          {
-            model: this.product,
-            attributes: ["id", "name"],
-            through: { attributes: ["amount"] },
-          },
           {
             model: this.user,
             attributes: ["points"],
@@ -25,6 +21,11 @@ class OrderController {
               model: this.level,
               attributes: ["title", "requirement"],
             },
+          },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: ["amount"] },
           },
         ],
       });
