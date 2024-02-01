@@ -11,7 +11,7 @@ class UserController {
         attributes: ["email", "points"],
         include: {
           model: this.level,
-          attributes: ["title", "discount", "requirement"],
+          attributes: ["discount"],
         },
       });
       return res.json(userInfo);
