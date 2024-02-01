@@ -6,13 +6,13 @@ class OrderController {
     this.productorder = db.productorder;
     this.user = db.user;
     this.level = db.level;
+    this.message = db.message;
   }
 
   getOrder = async (req, res) => {
     const { orderId } = req.params;
     try {
       const order = await this.order.findByPk(orderId, {
-        attributes: { exclude: ["id", "userId"] },
         include: [
           {
             model: this.user,
@@ -27,6 +27,7 @@ class OrderController {
             attributes: ["id", "name"],
             through: { attributes: ["amount"] },
           },
+          { model: this.message, attributes: { exclude: ["id", "orderId"] } },
         ],
       });
       return res.json(order);

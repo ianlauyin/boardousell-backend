@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.productorder);
       this.belongsToMany(models.product, { through: models.productorder });
       this.belongsTo(models.user);
+      this.hasMany(models.message);
     }
   }
   Order.init(
