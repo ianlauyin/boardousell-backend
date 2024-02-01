@@ -94,6 +94,20 @@ class OrderController {
       return res.status(400).json({ error: true, msg: error });
     }
   };
+
+  getAllOrder = async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const orders = await this.order.findAll({
+        where: { userId: userId },
+        attributes: { exclude: ["userId", "address"] },
+        order: [["createdAt", "DESC"]],
+      });
+      return res.json(orders);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 }
 
 module.exports = OrderController;
