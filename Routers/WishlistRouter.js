@@ -7,7 +7,10 @@ class WishlistRouter {
   }
 
   routes() {
-    router.get(`/:userId`, this.controller.getWishlists.bind(this.controller));
+    router.get(
+      `/info/:userId`,
+      this.controller.getWishlists.bind(this.controller)
+    );
     router.post(`/`, this.controller.addWishItem.bind(this.controller));
     router.delete(
       "/:wishlistId",

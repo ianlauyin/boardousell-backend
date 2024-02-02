@@ -11,6 +11,10 @@ class ProductRouter {
       "/newProduct",
       this.controller.getNewProduct.bind(this.controller)
     );
+    router.get(
+      "/info/:productId",
+      this.controller.getProductInfo.bind(this.controller)
+    );
     return router;
   }
 }

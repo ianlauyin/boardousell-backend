@@ -7,7 +7,7 @@ class CartRouter {
   }
 
   routes() {
-    router.get("/:userId", this.controller.getCart.bind(this.controller));
+    router.get("/info/:userId", this.controller.getCart.bind(this.controller));
     router.post("/", this.controller.addCartItem.bind(this.controller));
     router.delete(
       "/:cartId",
