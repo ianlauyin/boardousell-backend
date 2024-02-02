@@ -39,11 +39,6 @@ const ProductController = require("./Controllers/ProductController");
 const productController = new ProductController(db);
 const productRouter = new ProductRouter(productController).routes();
 
-const ReviewRouter = require("./Routers/ReviewRouter");
-const ReviewController = require("./Controllers/ReviewController");
-const reviewController = new ReviewController(db);
-const reviewRouter = new ReviewRouter(reviewController).routes();
-
 const UserRouter = require("./Routers/UserRouter");
 const UserController = require("./Controllers/UserController");
 const userController = new UserController(db);
@@ -72,7 +67,6 @@ app.use("/category", categoryRouter);
 app.use("/notice", noticeRouter);
 app.use("/order", orderRouter);
 app.use("/product", productRouter);
-app.use("/review", reviewRouter);
 app.use("/user", userRouter);
 app.use("/wishlist", wishlistRouter);
 app.use("/cart", cartRouter);

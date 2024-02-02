@@ -7,6 +7,10 @@ class CategoryRouter {
   }
 
   routes() {
+    router.get(
+      `/suggest/:category`,
+      this.controller.getSuggestProducts.bind(this.controller)
+    );
     return router;
   }
 }

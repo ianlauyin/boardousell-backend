@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.wishlist);
-      this.hasMany(models.review);
       this.belongsTo(models.level);
       this.hasMany(models.cart);
       this.hasMany(models.order);

@@ -5,16 +5,42 @@ class ProductController {
     this.productPhoto = db.productPhoto;
     this.onsale = db.onsale;
     this.category = db.category;
-    this.review = db.review;
-    this.user = db.user;
   }
+
+  getOnsaleProduct = async (req, res) => {
+    try {
+      const products = await this.product.findAll({
+        order: [["created_at", "DESC"]],
+        attributes: ["id", "price", "name", "stocks"],
+        include: [
+          {
+            attributes: ["discount"],
+            model: this.onsale,
+            required: true,
+          },
+          {
+            model: this.productPhoto,
+            attributes: ["url"],
+            limit: 1,
+          },
+        ],
+      });
+      return res.json(products);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 
   getProductInfo = async (req, res) => {
     const { productId } = req.params;
     try {
       const productDetail = await this.product.findByPk(productId, {
         include: [
-          { model: this.category, attributes: ["name"] },
+          {
+            model: this.category,
+            attributes: ["name"],
+            through: { attributes: [] },
+          },
           { model: this.productPhoto, attributes: ["url"] },
           { model: this.onsale, attributes: ["discount"] },
         ],

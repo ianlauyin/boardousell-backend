@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.order, { through: models.productorder });
       this.hasMany(models.productorder);
       this.hasMany(models.wishlist);
-      this.hasMany(models.review);
       this.belongsToMany(models.category, { through: "product_categories" });
       this.hasOne(models.newproduct);
       this.hasOne(models.onsale);
