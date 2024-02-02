@@ -8,6 +8,10 @@ class CategoryRouter {
 
   routes() {
     router.get(
+      `/explore`,
+      this.controller.getExploreProducts.bind(this.controller)
+    );
+    router.get(
       `/suggest/:category`,
       this.controller.getSuggestProducts.bind(this.controller)
     );

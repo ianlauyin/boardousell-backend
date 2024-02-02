@@ -14,16 +14,6 @@ module.exports = {
      */
     await queryInterface.bulkInsert(`categories`, [
       {
-        name: "Strategy",
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        name: "Party game",
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
         name: "Cooperative game",
         created_at: new Date(),
         updated_at: new Date(),
