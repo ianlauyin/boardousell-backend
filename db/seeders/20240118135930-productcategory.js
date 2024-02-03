@@ -44,12 +44,6 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        product_id: 1,
-        category_id: 5,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
         product_id: 4,
         category_id: 1,
         created_at: new Date(),

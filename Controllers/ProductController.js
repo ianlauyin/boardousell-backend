@@ -7,6 +7,46 @@ class ProductController {
     this.category = db.category;
   }
 
+  searchProduct = async (req, res) => {
+    try {
+      const { query } = req;
+      const includeSearchCategory = query.category
+        ? [
+            {
+              model: this.category,
+              where: { name: query.category },
+              attributes: [],
+              through: { attributes: [] },
+            },
+          ]
+        : [];
+      const data = await this.product.findAll({
+        attributes: ["id", "name", "price", "stocks", "description"],
+        order: [["createdAt", "DESC"]],
+        include: [
+          { model: this.productPhoto, limit: 1, attributes: ["url"] },
+          { model: this.onsale, attributes: ["discount"] },
+          ...includeSearchCategory,
+        ],
+      });
+      if ("keyword" in query) {
+        const result = data.filter((product) => {
+          if (
+            product.name.toLowerCase().includes(query.keyword.toLowerCase()) ||
+            product.description
+              .toLowerCase()
+              .includes(query.keyword.toLowerCase())
+          )
+            return true;
+        });
+        return res.json(result);
+      }
+      return res.json(data);
+    } catch (error) {
+      res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   getOnsaleProduct = async (req, res) => {
     try {
       const products = await this.product.findAll({

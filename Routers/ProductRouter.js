@@ -7,6 +7,7 @@ class ProductRouter {
   }
 
   routes() {
+    router.get("/search", this.controller.searchProduct.bind(this.controller));
     router.get(
       "/onsale",
       this.controller.getOnsaleProduct.bind(this.controller)
