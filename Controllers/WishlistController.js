@@ -7,6 +7,9 @@ class WishlistController {
 
   getWishlists = async (req, res) => {
     const { userId } = req.params;
+    if (isNaN(Number(userId))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of userID" });
+    }
     try {
       const user = await this.user.findByPk(userId);
       const wishlists = await user.getWishlists({
@@ -26,6 +29,11 @@ class WishlistController {
 
   addWishItem = async (req, res) => {
     const { userId, productId } = req.body;
+    if (isNaN(Number(userId)) || isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of userID/productID" });
+    }
     try {
       const wishItem = await this.wishlist.create({
         userId,
@@ -49,6 +57,11 @@ class WishlistController {
 
   deleteWishItem = async (req, res) => {
     const { wishlistId } = req.params;
+    if (isNaN(Number(wishlistId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of wishlistId" });
+    }
     try {
       await this.wishlist.destroy({
         where: { id: wishlistId },

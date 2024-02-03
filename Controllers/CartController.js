@@ -60,7 +60,7 @@ class CartController {
   deleteCartItem = async (req, res) => {
     const { cartId } = req.params;
     if (isNaN(Number(cartId))) {
-      return res.status(400).json({ error: true, msg: "Wrong Type of cartId" });
+      return res.status(400).json({ error: true, msg: "Wrong Type of CartID" });
     }
     try {
       await this.cart.destroy({

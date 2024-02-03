@@ -11,6 +11,11 @@ class OrderController {
 
   paidOrder = async (req, res) => {
     const { orderId } = req.body;
+    if (isNaN(Number(orderId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of orderID" });
+    }
     try {
       const order = await this.order.findByPk(orderId);
       if (order.status !== "Pending") {
@@ -35,6 +40,11 @@ class OrderController {
 
   getOrder = async (req, res) => {
     const { orderId } = req.params;
+    if (isNaN(Number(orderId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of orderID" });
+    }
     try {
       const order = await this.order.findByPk(orderId, {
         include: [
@@ -65,6 +75,18 @@ class OrderController {
 
   postOrder = async (req, res) => {
     const { address, userId, productIdList, amount } = req.body;
+    if (isNaN(Number(userId)) || isNaN(Number(amount))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of userID/amount" });
+    }
+    for (const productId of productIdList) {
+      if (isNaN(Number(productId))) {
+        return res
+          .status(400)
+          .json({ error: true, msg: "Wrong Type of productID" });
+      }
+    }
     try {
       const product = {};
       for (const id of productIdList) {
@@ -100,6 +122,9 @@ class OrderController {
 
   getAllOrder = async (req, res) => {
     const { userId } = req.params;
+    if (isNaN(Number(userId))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of userID" });
+    }
     try {
       const orders = await this.order.findAll({
         where: { userId: userId },

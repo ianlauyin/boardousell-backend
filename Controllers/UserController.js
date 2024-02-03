@@ -6,6 +6,9 @@ class UserController {
 
   getUserInfo = async (req, res) => {
     const { userId } = req.params;
+    if (isNaN(Number(userId))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of userID" });
+    }
     try {
       const userInfo = await this.user.findByPk(userId, {
         attributes: ["email", "points"],

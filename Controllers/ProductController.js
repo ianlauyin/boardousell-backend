@@ -73,6 +73,11 @@ class ProductController {
 
   getProductInfo = async (req, res) => {
     const { productId } = req.params;
+    if (isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of productID" });
+    }
     try {
       const productDetail = await this.product.findByPk(productId, {
         include: [
