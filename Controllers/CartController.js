@@ -8,6 +8,9 @@ class CartController {
 
   getCart = async (req, res) => {
     const { userId } = req.params;
+    if (isNaN(Number(userId))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of UserID" });
+    }
     try {
       const user = await this.user.findByPk(userId);
       const cart = await user.getCarts({
@@ -28,6 +31,11 @@ class CartController {
 
   addCartItem = async (req, res) => {
     const { userId, productId } = req.body;
+    if (isNaN(Number(userId)) || isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of UserID or ProductID" });
+    }
     try {
       const cartItem = await this.cart.create({
         userId,
@@ -51,6 +59,9 @@ class CartController {
 
   deleteCartItem = async (req, res) => {
     const { cartId } = req.params;
+    if (isNaN(Number(cartId))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of cartId" });
+    }
     try {
       await this.cart.destroy({
         where: { id: cartId },

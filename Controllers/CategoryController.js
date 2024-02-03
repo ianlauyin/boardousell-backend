@@ -24,6 +24,9 @@ class CategoryController {
       const categoryInfo = await this.category.findOne({
         where: { name: category },
       });
+      if (!categoryInfo) {
+        throw new Error("No Such Category");
+      }
       const products = await categoryInfo.getProducts({
         attributes: { exclude: ["description", "createdAt", "updatedAt"] },
         order: [["createdAt", "DESC"]],
@@ -41,7 +44,7 @@ class CategoryController {
       });
       return res.json(products);
     } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
+      return res.status(400).json({ error: true, msg: error.message });
     }
   };
 }
