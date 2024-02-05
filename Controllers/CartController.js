@@ -47,6 +47,10 @@ class CartController {
           {
             model: this.product,
             attributes: ["id", "name", "stocks", "price"],
+            include: {
+              model: this.onsale,
+              attributes: ["discount"],
+            },
           },
         ],
       });

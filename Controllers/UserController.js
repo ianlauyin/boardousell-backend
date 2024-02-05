@@ -36,7 +36,7 @@ class UserController {
     }
     try {
       const userInfo = await this.user.findByPk(userId, {
-        attributes: ["email", "points"],
+        attributes: { exclude: ["uuid", "levelId"] },
         include: {
           model: this.level,
           attributes: ["discount"],

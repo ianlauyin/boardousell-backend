@@ -3,6 +3,7 @@ class WishlistController {
     this.wishlist = db.wishlist;
     this.user = db.user;
     this.product = db.product;
+    this.onsale = db.onsale;
   }
 
   getWishlists = async (req, res) => {
@@ -18,6 +19,10 @@ class WishlistController {
           {
             model: this.product,
             attributes: ["id", "name", "stocks", "price"],
+            include: {
+              model: this.onsale,
+              attributes: ["discount"],
+            },
           },
         ],
       });
@@ -45,6 +50,10 @@ class WishlistController {
           {
             model: this.product,
             attributes: ["id", "name", "stocks", "price"],
+            include: {
+              model: this.onsale,
+              attributes: ["discount"],
+            },
           },
         ],
       });
