@@ -15,22 +15,27 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      uuid: {
+        type: Sequelize.STRING,
+      },
+      is_admin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       level_id: {
         type: Sequelize.INTEGER,
         references: {
           model: "levels",
           key: "id",
         },
+        defaultValue: 1,
       },
       points: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       phone: {
         type: Sequelize.INTEGER,
-      },
-      is_admin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
       },
       created_at: {
         allowNull: false,

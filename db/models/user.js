@@ -21,10 +21,12 @@ module.exports = (sequelize, DataTypes) => {
       levelId: {
         type: DataTypes.INTEGER,
         references: { model: "levels", key: "id" },
+        defaultValue: 1,
       },
-      points: DataTypes.INTEGER,
-      phone: DataTypes.INTEGER,
+      uuid: DataTypes.STRING,
       isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false },
+      points: { type: DataTypes.INTEGER, defaultValue: 0 },
+      phone: DataTypes.INTEGER,
     },
     {
       sequelize,

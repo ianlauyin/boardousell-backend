@@ -29,6 +29,8 @@ class ProductController {
           ...includeSearchCategory,
         ],
       });
+      const offset = query.page > 1 ? query.page : 1;
+      const resultPerPage = 5;
       if ("keyword" in query) {
         const result = data.filter((product) => {
           if (
@@ -36,12 +38,25 @@ class ProductController {
             product.description
               .toLowerCase()
               .includes(query.keyword.toLowerCase())
-          )
+          ) {
             return true;
+          }
         });
-        return res.json(result);
+        return res.json({
+          resultAmount: result.length,
+          result: result.slice(
+            (offset - 1) * resultPerPage,
+            offset * resultPerPage
+          ),
+        });
       }
-      return res.json(data);
+      return res.json({
+        resultAmount: data.length,
+        result: data.slice(
+          (offset - 1) * resultPerPage,
+          offset * resultPerPage
+        ),
+      });
     } catch (error) {
       res.status(400).json({ error: true, msg: error });
     }
