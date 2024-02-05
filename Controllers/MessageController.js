@@ -5,7 +5,6 @@ class MessageController {
 
   postMessage = async (req, res) => {
     const { isUserReceived, detail, orderId } = req.body;
-    console.log(req.body);
     if (isNaN(Number(orderId)) || typeof isUserReceived !== "boolean") {
       return res
         .status(400)

@@ -36,11 +36,8 @@ class UserController {
     }
     try {
       const userInfo = await this.user.findByPk(userId, {
-        attributes: { exclude: ["uuid", "levelId"] },
-        include: {
-          model: this.level,
-          attributes: ["discount"],
-        },
+        attributes: { exclude: ["uuid", "levelId", "isAdmin"] },
+        include: this.level,
       });
       return res.json(userInfo);
     } catch (error) {
