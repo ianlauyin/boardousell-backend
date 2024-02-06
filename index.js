@@ -4,18 +4,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_KEY);
-app.post("/payment", async (req, res) => {
-  const { amount } = req.body;
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: "hkd",
-  });
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
-});
 
 const port = process.env.PORT;
 const db = require("./db/models/index");
@@ -64,6 +52,17 @@ const MessageRouter = require("./Routers/MessageRouter");
 const MessageController = require("./Controllers/MessageController");
 const messageController = new MessageController(db);
 const messageRouter = new MessageRouter(messageController).routes();
+
+const LevelRouter = require("./Routers/LevelRouter");
+const LevelController = require("./Controllers/LevelController");
+const levelController = new LevelController(db);
+const levelRouter = new LevelRouter(levelController).routes();
+
+const PaymentRouter = require("./Routers/PaymentRouter");
+const PaymentController = require("./Controllers/PaymentController");
+const paymentController = new PaymentController();
+const paymentRouter = new PaymentRouter(paymentController).routes();
+
 app.use("/category", categoryRouter);
 app.use("/notice", noticeRouter);
 app.use("/order", orderRouter);
@@ -73,6 +72,8 @@ app.use("/wishlist", wishlistRouter);
 app.use("/cart", cartRouter);
 app.use("/infomation", infomationRouter);
 app.use("/message", messageRouter);
+app.use("/level", levelRouter);
+app.use("/payment", paymentRouter);
 
 app.listen(port, () => {
   console.log(`listening on port${port}`);
