@@ -44,6 +44,16 @@ class UserController {
       return res.status(400).send({ error: true, msg: error });
     }
   };
+
+  adminSearchUser = async (req, res) => {
+    try {
+      const { query } = req;
+      const users = await this.user.findAll({ where: query });
+      return res.json(users);
+    } catch (error) {
+      return res.status(400).send({ error: true, msg: error });
+    }
+  };
 }
 
 module.exports = UserController;
