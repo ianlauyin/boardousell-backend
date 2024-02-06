@@ -7,7 +7,8 @@ class LevelRouter {
   }
 
   routes() {
-    router.get(`/`, this.controller.getAllLevel.bind(this.level));
+    router.put(`/`, this.controller.updateLevelInfo.bind(this.controller));
+    router.get(`/`, this.controller.getAllLevel.bind(this.controller));
     return router;
   }
 }
