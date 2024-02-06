@@ -10,7 +10,6 @@ class LevelController {
       attributes: ["id", "requirement"],
       order: [["requirement", "ASC"]],
     });
-    console.log(levels[0].id);
     await this.user.update(
       { levelId: levels[0].id },
       {
@@ -28,6 +27,19 @@ class LevelController {
           },
         }
       );
+    }
+  };
+  postNewLevel = async (req, res) => {
+    const newData = req.body;
+    try {
+      await this.level.create(newData);
+      this.updateUserLevel();
+      const data = await this.level.findAll({
+        order: [["requirement", "ASC"]],
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
     }
   };
 
