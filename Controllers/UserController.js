@@ -48,7 +48,10 @@ class UserController {
   adminSearchUser = async (req, res) => {
     try {
       const { query } = req;
-      const users = await this.user.findAll({ where: query });
+      const users = await this.user.findAll({
+        where: query,
+        attributes: { exclude: ["uuid"] },
+      });
       return res.json(users);
     } catch (error) {
       return res.status(400).send({ error: true, msg: error });
