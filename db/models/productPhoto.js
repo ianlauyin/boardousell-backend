@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       url: DataTypes.STRING,
+      trumbmail: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
       sequelize,

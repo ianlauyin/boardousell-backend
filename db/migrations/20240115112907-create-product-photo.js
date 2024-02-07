@@ -16,6 +16,10 @@ module.exports = {
           key: "id",
         },
       },
+      trumbmail: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       url: {
         type: Sequelize.STRING,
       },
