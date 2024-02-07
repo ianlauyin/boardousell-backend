@@ -10,8 +10,41 @@ class ProductController {
     this.resultPerPage = 5;
   }
 
+  deletePhoto = async (req, res) => {
+    const { photoId } = req.params;
+    if (isNaN(Number(photoId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Photo Id" });
+    }
+    try {
+      const target = await this.productPhoto.findByPk(photoId);
+      if (target.thumbnail) {
+        const newThumbnail = await this.productPhoto.findOne({
+          where: {
+            [Op.and]: [{ productId: target.productId }, { thumbnail: false }],
+          },
+        });
+        if (!!newThumbnail) {
+          await newThumbnail.update({ thumbnail: true });
+        }
+      }
+
+      await target.destroy();
+
+      return res.json("Ok");
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   changeThumbnail = async (req, res) => {
     const { photoId } = req.body;
+    if (isNaN(Number(photoId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Photo Id" });
+    }
     try {
       const data = await this.productPhoto.findByPk(photoId);
       await this.productPhoto.update(

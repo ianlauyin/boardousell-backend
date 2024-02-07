@@ -23,6 +23,7 @@ class ProductRouter {
       `/admin/all/:page`,
       this.controller.adminGetAllProducts.bind(this.controller)
     );
+
     router.put(
       `/photo/thumbnail`,
       this.controller.changeThumbnail.bind(this.controller)
@@ -35,6 +36,10 @@ class ProductRouter {
     router.get(
       "/newProduct",
       this.controller.getNewProduct.bind(this.controller)
+    );
+    router.delete(
+      `/photo/:photoId`,
+      this.controller.deletePhoto.bind(this.controller)
     );
     router.get(
       "/info/:productId",
