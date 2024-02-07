@@ -10,6 +10,21 @@ class ProductController {
     this.resultPerPage = 5;
   }
 
+  changeThumbnail = async (req, res) => {
+    const { photoId } = req.body;
+    try {
+      const data = await this.productPhoto.findByPk(photoId);
+      await this.productPhoto.update(
+        { thumbnail: false },
+        { where: { productId: data.productId } }
+      );
+      await data.update({ thumbnail: true });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   adminSearchCategory = async (req, res) => {
     const { category, page } = req.params;
     if (isNaN(Number(page))) {
@@ -147,7 +162,12 @@ class ProductController {
         attributes: ["id", "name", "price", "stocks", "description"],
         order: [["createdAt", "DESC"]],
         include: [
-          { model: this.productPhoto, limit: 1, attributes: ["url"] },
+          {
+            model: this.productPhoto,
+            where: { thumbnail: true },
+            required: false,
+            attributes: ["url"],
+          },
           { model: this.onsale, attributes: ["discount"] },
           ...includeSearchCategory,
         ],
@@ -198,7 +218,8 @@ class ProductController {
           {
             model: this.productPhoto,
             attributes: ["url"],
-            limit: 1,
+            where: { thumbnail: true },
+            required: false,
           },
         ],
       });
@@ -247,7 +268,8 @@ class ProductController {
           {
             model: this.productPhoto,
             attributes: ["url"],
-            limit: 1,
+            where: { thumbnail: true },
+            required: false,
           },
           {
             model: this.onsale,

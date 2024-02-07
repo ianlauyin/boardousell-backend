@@ -23,6 +23,10 @@ class ProductRouter {
       `/admin/all/:page`,
       this.controller.adminGetAllProducts.bind(this.controller)
     );
+    router.put(
+      `/photo/thumbnail`,
+      this.controller.changeThumbnail.bind(this.controller)
+    );
     router.get("/search", this.controller.searchProduct.bind(this.controller));
     router.get(
       "/onsale",

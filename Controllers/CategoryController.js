@@ -38,7 +38,7 @@ class CategoryController {
             model: this.productPhoto,
             attributes: ["url"],
             separate: true,
-            limit: 1,
+            where: { thumbnail: true },
           },
         ],
       });
