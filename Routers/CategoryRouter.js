@@ -8,9 +8,9 @@ class CategoryRouter {
 
   routes() {
     router.get(`/all`, this.controller.getAllCategory.bind(this.controller));
-    router.post(
+    router.put(
       `/product`,
-      this.controller.addProductToCategory.bind(this.controller)
+      this.controller.changeRelationWithProduct.bind(this.controller)
     );
     router.get(
       `/suggest/:category`,

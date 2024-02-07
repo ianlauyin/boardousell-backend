@@ -19,6 +19,30 @@ class CategoryController {
     return data;
   };
 
+  changeRelationWithProduct = async (req, res) => {
+    const { link, category, productId } = req.body;
+    if (isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Product Id" });
+    }
+    try {
+      const product = await this.product.findByPk(productId);
+      const categoryInfo = await this.category.findOne({
+        where: { name: category },
+      });
+      if (link) {
+        await product.addCategories(categoryInfo);
+      } else {
+        await product.removeCategories(categoryInfo);
+      }
+      const data = await this.getAdminUpdateProduct(productId);
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   addProductToCategory = async (req, res) => {
     const { category, productId } = req.body;
     if (isNaN(Number(productId))) {
