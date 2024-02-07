@@ -21,10 +21,10 @@ class ProductController {
         return res.status(400).json({ error: true, msg: "Wrong Input" });
       }
     }
-    const leftLimit = arr[0];
-    const rightLimit = arr[1] ? arr[1] : arr[0];
+    const lowerLimit = arr[0];
+    const upperLimit = arr[1] ? arr[1] : arr[0];
     const condition = {
-      where: { stocks: { [Op.between]: [leftLimit, rightLimit] } },
+      where: { stocks: { [Op.between]: [lowerLimit, upperLimit] } },
     };
     const offset = page - 1;
     try {
