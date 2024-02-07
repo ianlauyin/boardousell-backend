@@ -23,7 +23,6 @@ class ProductRouter {
       `/admin/all/:page`,
       this.controller.adminGetAllProducts.bind(this.controller)
     );
-
     router.put(
       `/photo/thumbnail`,
       this.controller.changeThumbnail.bind(this.controller)
