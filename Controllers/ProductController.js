@@ -10,14 +10,54 @@ class ProductController {
     this.resultPerPage = 5;
   }
 
+  adminSearchStocks = async (req, res) => {
+    const { amount, page } = req.params;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    const arr = amount.split("-");
+    for (const limit of arr) {
+      if (isNaN(Number(limit))) {
+        return res.status(400).json({ error: true, msg: "Wrong Input" });
+      }
+    }
+    const leftLimit = arr[0];
+    const rightLimit = arr[1] ? arr[1] : arr[0];
+    const condition = {
+      where: { stocks: { [Op.between]: [leftLimit, rightLimit] } },
+    };
+    const offset = page - 1;
+    try {
+      const count = await this.product.count(condition);
+      const data = await this.product.findAll({
+        ...condition,
+        order: [["id", "DESC"]],
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          this.onsale,
+        ],
+        limit: this.resultPerPage,
+        offset: offset * this.resultPerPage,
+      });
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   adminSearchName = async (req, res) => {
     const { name, page } = req.params;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    const offset = page - 1;
+    const condition = { where: { name: { [Op.iLike]: `%${name}%` } } };
     try {
-      const offset = page - 1;
-      const conditon = { where: { name: { [Op.iLike]: `%${name}%` } } };
-      const count = await this.product.count(conditon);
+      const count = await this.product.count(condition);
       const data = await this.product.findAll({
-        ...conditon,
+        ...condition,
         order: [["id", "DESC"]],
         include: [
           this.productPhoto,
@@ -36,6 +76,9 @@ class ProductController {
 
   adminGetAllProducts = async (req, res) => {
     const { page } = req.params;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
     try {
       const offset = page - 1;
       const count = await this.product.count();
