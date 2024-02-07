@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 
 class ProductController {
   constructor(db) {
@@ -10,6 +10,18 @@ class ProductController {
     this.resultPerPage = 5;
   }
 
+  getAdminUpdateProduct = async (productId) => {
+    const data = await this.product.findByPk(productId, {
+      include: [
+        this.productPhoto,
+        { model: this.category, through: { attributes: [] } },
+        this.newproduct,
+        this.onsale,
+      ],
+    });
+    return data;
+  };
+
   deletePhoto = async (req, res) => {
     const { photoId } = req.params;
     if (isNaN(Number(photoId))) {
@@ -19,20 +31,20 @@ class ProductController {
     }
     try {
       const target = await this.productPhoto.findByPk(photoId);
+      const { productId } = target;
       if (target.thumbnail) {
         const newThumbnail = await this.productPhoto.findOne({
           where: {
-            [Op.and]: [{ productId: target.productId }, { thumbnail: false }],
+            [Op.and]: [{ productId: productId }, { thumbnail: false }],
           },
         });
         if (!!newThumbnail) {
           await newThumbnail.update({ thumbnail: true });
         }
       }
-
       await target.destroy();
-
-      return res.json("Ok");
+      const data = await this.getAdminUpdateProduct(productId);
+      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -46,12 +58,17 @@ class ProductController {
         .json({ error: true, msg: "Wrong Type of Photo Id" });
     }
     try {
-      const data = await this.productPhoto.findByPk(photoId);
+      const photo = await this.productPhoto.findByPk(photoId);
+      const { productId } = photo;
       await this.productPhoto.update(
         { thumbnail: false },
-        { where: { productId: data.productId } }
+        { where: { productId: productId } }
       );
-      await data.update({ thumbnail: true });
+      await this.productPhoto.update(
+        { thumbnail: true },
+        { where: { id: photoId } }
+      );
+      const data = await this.getAdminUpdateProduct(productId);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
