@@ -7,6 +7,28 @@ class ProductController {
     this.category = db.category;
   }
 
+  adminGetAllProducts = async (req, res) => {
+    const { page } = req.params;
+    try {
+      const offset = page ? page - 1 : 0;
+      const resultPerPage = 5;
+      const data = await this.product.findAll({
+        order: [["id", "DESC"]],
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          this.onsale,
+        ],
+        limit: resultPerPage,
+        offset: offset * resultPerPage,
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   searchProduct = async (req, res) => {
     try {
       const { query } = req;
@@ -58,7 +80,7 @@ class ProductController {
         ),
       });
     } catch (error) {
-      res.status(400).json({ error: true, msg: error });
+      return res.status(400).json({ error: true, msg: error });
     }
   };
 

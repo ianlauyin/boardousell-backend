@@ -39,6 +39,11 @@ class LevelController {
 
   deleteLevel = async (req, res) => {
     const { levelId } = req.params;
+    if (isNaN(Number(levelId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of levelID" });
+    }
     try {
       const randomLevel = await this.level.findOne();
       await this.user.update(
@@ -67,6 +72,11 @@ class LevelController {
 
   updateLevelInfo = async (req, res) => {
     const { id, ...newData } = req.body;
+    if (isNaN(Number(id))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of levelID" });
+    }
     try {
       await this.level.update(newData, { where: { id: id } });
       if ("requirement" in newData) {
