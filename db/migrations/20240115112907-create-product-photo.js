@@ -16,7 +16,7 @@ module.exports = {
           key: "id",
         },
       },
-      trumbmail: {
+      thumbnail: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
