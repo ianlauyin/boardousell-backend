@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 class ProductController {
   constructor(db) {
     this.product = db.product;
@@ -5,13 +7,38 @@ class ProductController {
     this.productPhoto = db.productPhoto;
     this.onsale = db.onsale;
     this.category = db.category;
+    this.resultPerPage = 5;
   }
+
+  adminSearchName = async (req, res) => {
+    const { name, page } = req.params;
+    try {
+      const offset = page - 1;
+      const conditon = { where: { name: { [Op.iLike]: `%${name}%` } } };
+      const count = await this.product.count(conditon);
+      const data = await this.product.findAll({
+        ...conditon,
+        order: [["id", "DESC"]],
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          this.onsale,
+        ],
+        limit: this.resultPerPage,
+        offset: offset * this.resultPerPage,
+      });
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 
   adminGetAllProducts = async (req, res) => {
     const { page } = req.params;
     try {
-      const offset = page ? page - 1 : 0;
-      const resultPerPage = 5;
+      const offset = page - 1;
+      const count = await this.product.count();
       const data = await this.product.findAll({
         order: [["id", "DESC"]],
         include: [
@@ -20,10 +47,10 @@ class ProductController {
           this.newproduct,
           this.onsale,
         ],
-        limit: resultPerPage,
-        offset: offset * resultPerPage,
+        limit: this.resultPerPage,
+        offset: offset * this.resultPerPage,
       });
-      return res.json(data);
+      return res.json({ count: count, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -52,7 +79,6 @@ class ProductController {
         ],
       });
       const offset = query.page > 1 ? query.page : 1;
-      const resultPerPage = 5;
       if ("keyword" in query) {
         const result = data.filter((product) => {
           if (
@@ -67,16 +93,16 @@ class ProductController {
         return res.json({
           resultAmount: result.length,
           result: result.slice(
-            (offset - 1) * resultPerPage,
-            offset * resultPerPage
+            (offset - 1) * this.resultPerPage,
+            offset * this.resultPerPage
           ),
         });
       }
       return res.json({
         resultAmount: data.length,
         result: data.slice(
-          (offset - 1) * resultPerPage,
-          offset * resultPerPage
+          (offset - 1) * this.resultPerPage,
+          offset * this.resultPerPage
         ),
       });
     } catch (error) {
