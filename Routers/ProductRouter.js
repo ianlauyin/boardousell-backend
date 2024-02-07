@@ -8,6 +8,10 @@ class ProductRouter {
 
   routes() {
     router.get(
+      `/admin/category/:category/:page`,
+      this.controller.adminSearchCategory.bind(this.controller)
+    );
+    router.get(
       `/admin/stocks/:amount/:page`,
       this.controller.adminSearchStocks.bind(this.controller)
     );
