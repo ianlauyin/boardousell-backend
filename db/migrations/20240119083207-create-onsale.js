@@ -18,6 +18,7 @@ module.exports = {
       },
       discount: {
         type: Sequelize.FLOAT,
+        defaultValue: 1,
       },
       created_at: {
         allowNull: false,

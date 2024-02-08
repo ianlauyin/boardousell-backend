@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         references: { model: "products", key: "id" },
       },
-      discount: DataTypes.FLOAT,
+      discount: { type: DataTypes.FLOAT, defaultValue: 1 },
     },
     {
       sequelize,

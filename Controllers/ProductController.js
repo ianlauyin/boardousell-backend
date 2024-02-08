@@ -21,6 +21,33 @@ class ProductController {
     return data;
   };
 
+  changeNewProduct = async (req, res) => {
+    const { productId } = req.params;
+    const { isNew } = req.body;
+    if (isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of product Id" });
+    }
+    try {
+      if (isNew) {
+        const checking = await this.newproduct.findOne({
+          where: { productId: productId },
+        });
+        if (checking) {
+          throw new Error("Already exist");
+        }
+        await this.newproduct.create({ productId });
+      } else {
+        await this.newproduct.destroy({ where: { productId: productId } });
+      }
+      const data = await this.getAdminUpdateProduct(productId);
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   updateProductInfo = async (req, res) => {
     const { productId } = req.params;
     const newInfo = req.body;
@@ -29,7 +56,7 @@ class ProductController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of product Id" });
     }
-    if (newInfo.stocks && isNaN(Number(newInfo.stocks))) {
+    if (newInfo.stks && isNaN(Number(newInfo.stocks))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of stocks" });
     }
     if (newInfo.price && isNaN(Number(newInfo.price))) {

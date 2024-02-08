@@ -38,6 +38,10 @@ class ProductRouter {
     );
     router.post(`/photo/`, this.controller.addPhoto.bind(this.controller));
     router.put(
+      `/newProduct/:productId`,
+      this.controller.changeNewProduct.bind(this.controller)
+    );
+    router.put(
       `/info/:productId`,
       this.controller.updateProductInfo.bind(this.controller)
     );
