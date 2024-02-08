@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       url: DataTypes.STRING,
+      fileName: DataTypes.STRING,
       thumbnail: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {

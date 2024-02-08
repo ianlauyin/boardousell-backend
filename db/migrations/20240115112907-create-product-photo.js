@@ -16,6 +16,9 @@ module.exports = {
           key: "id",
         },
       },
+      file_name: {
+        type: Sequelize.STRING,
+      },
       thumbnail: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,

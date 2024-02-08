@@ -36,6 +36,7 @@ class ProductRouter {
       "/newProduct",
       this.controller.getNewProduct.bind(this.controller)
     );
+    router.post(`/photo/`, this.controller.addPhoto.bind(this.controller));
     router.delete(
       `/photo/:photoId`,
       this.controller.deletePhoto.bind(this.controller)

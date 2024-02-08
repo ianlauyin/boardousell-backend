@@ -22,6 +22,28 @@ class ProductController {
     return data;
   };
 
+  addPhoto = async (req, res) => {
+    if (isNaN(Number(req.body.productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Product Id" });
+    }
+    const newPhotoData = req.body;
+    try {
+      const checking = await this.productPhoto.count({
+        where: { productId: req.body.productId },
+      });
+      await this.productPhoto.create({
+        ...newPhotoData,
+        ...(checking === 0 && { thumbnail: true }),
+      });
+      const data = await this.getAdminUpdateProduct(req.body.productId);
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   deletePhoto = async (req, res) => {
     const { photoId } = req.params;
     if (isNaN(Number(photoId))) {
