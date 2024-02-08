@@ -36,10 +36,15 @@ class ProductRouter {
       "/newProduct",
       this.controller.getNewProduct.bind(this.controller)
     );
+    router.post(`/create`, this.controller.createProduct.bind(this.controller));
     router.post(`/photo/`, this.controller.addPhoto.bind(this.controller));
     router.put(
       `/newProduct/:productId`,
       this.controller.changeNewProduct.bind(this.controller)
+    );
+    router.put(
+      `/onsale/:productId`,
+      this.controller.changeOnsale.bind(this.controller)
     );
     router.put(
       `/info/:productId`,
