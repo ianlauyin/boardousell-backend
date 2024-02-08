@@ -1,4 +1,4 @@
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 class ProductController {
   constructor(db) {
@@ -9,7 +9,6 @@ class ProductController {
     this.category = db.category;
     this.resultPerPage = 5;
   }
-
   getAdminUpdateProduct = async (productId) => {
     const data = await this.product.findByPk(productId, {
       include: [
@@ -20,6 +19,56 @@ class ProductController {
       ],
     });
     return data;
+  };
+
+  updateProductInfo = async (req, res) => {
+    const { productId } = req.params;
+    const newInfo = req.body;
+    if (isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of product Id" });
+    }
+    if (newInfo.stocks && isNaN(Number(newInfo.stocks))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of stocks" });
+    }
+    if (newInfo.price && isNaN(Number(newInfo.price))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of price" });
+    }
+    try {
+      await this.product.update(newInfo, { where: { id: productId } });
+      const data = await this.getAdminUpdateProduct(productId);
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  updateDiscount = async (req, res) => {
+    const { onsaleId } = req.params;
+    const { discount } = req.body;
+    if (isNaN(Number(onsaleId) || isNaN(Number(discount)))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of onsale Id/discount" });
+    }
+    try {
+      await this.onsale.update(
+        { discount: discount },
+        { where: { id: onsaleId } }
+      );
+      const data = await this.product.findOne({
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          { model: this.onsale, where: { id: onsaleId } },
+        ],
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
   };
 
   addPhoto = async (req, res) => {
