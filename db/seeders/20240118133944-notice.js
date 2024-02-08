@@ -15,7 +15,7 @@ module.exports = {
     await queryInterface.bulkInsert("notices", [
       {
         title: "New Year Sales!",
-        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2F25_01.jpg?alt=media&token=0323212f-6360-4ce0-837a-c27215bf6ab8",
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2Fnotice1.jpg?alt=media&token=8bfecd58-7962-4a4b-b522-b3f46623860c",
         detail:
           "Happy New Year, everyone. We are giving out new year sales discount on certain boardgame. Please take a look and Have Fun!",
         created_at: new Date("2024-01-01T07:00:00"),
@@ -32,7 +32,7 @@ module.exports = {
         title: "Chinese New Year Sales",
         detail:
           "Happy Chinese New Year, everyone. We are giving out new year sales discount on certain boardgame. Please take a look and Have Fun!",
-        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2F8155740.jpg?alt=media&token=dd7d817c-cdef-482f-9e8b-41f538d3ccd0",
+        url: "https://firebasestorage.googleapis.com/v0/b/boardousell.appspot.com/o/notice%2Fnotice3.jpg?alt=media&token=27a8d4f3-24fc-42f4-8f7f-1d3ae228974f",
         created_at: new Date("2024-01-25T07:00:00"),
         updated_at: new Date("2024-01-25T07:00:00"),
       },
