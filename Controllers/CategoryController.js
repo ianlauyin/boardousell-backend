@@ -63,6 +63,25 @@ class CategoryController {
     }
   };
 
+  adminGetAllCategory = async (req, res) => {
+    try {
+      const data = await this.category.findAll();
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  addCategory = async (req, res) => {
+    const newCategory = req.body;
+    try {
+      const data = await this.category.create(newCategory);
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   getAllCategory = async (req, res) => {
     try {
       const categoryList = await this.category.findAll({
