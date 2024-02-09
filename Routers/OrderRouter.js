@@ -11,12 +11,13 @@ class OrderRouter {
       `/all/:userId`,
       this.controller.getAllOrder.bind(this.controller)
     );
-    router.put(`/paid`, this.controller.paidOrder.bind(this.controller));
     router.get(
       `/info/:orderId`,
       this.controller.getOrder.bind(this.controller)
     );
     router.post(`/`, this.controller.postOrder.bind(this.controller));
+    router.put(`/paid`, this.controller.paidOrder.bind(this.controller));
+
     return router;
   }
 }

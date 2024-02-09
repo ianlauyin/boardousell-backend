@@ -94,6 +94,25 @@ class CategoryController {
     }
   };
 
+  getLinkingProducts = async (req, res) => {
+    const { categoryId } = req.params;
+    if (isNaN(Number(categoryId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Category Id" });
+    }
+    try {
+      const category = await this.category.findByPk(categoryId);
+      const data = await category.getProducts({
+        attributes: ["id", "name"],
+        joinTableAttributes: [],
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   getAllCategory = async (req, res) => {
     try {
       const categoryList = await this.category.findAll({
