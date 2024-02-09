@@ -38,6 +38,10 @@ class ProductRouter {
     );
     router.post(`/create`, this.controller.createProduct.bind(this.controller));
     router.post(`/photo/`, this.controller.addPhoto.bind(this.controller));
+    router.get(
+      `/all/name`,
+      this.controller.getAllProductName.bind(this.controller)
+    );
     router.put(
       `/newProduct/:productId`,
       this.controller.changeNewProduct.bind(this.controller)

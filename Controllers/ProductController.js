@@ -414,6 +414,15 @@ class ProductController {
     }
   };
 
+  getAllProductName = async (req, res) => {
+    try {
+      const data = await this.product.findAll({ attributes: ["id", "name"] });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   getProductInfo = async (req, res) => {
     const { productId } = req.params;
     if (isNaN(Number(productId))) {
