@@ -21,6 +21,10 @@ class CategoryRouter {
       `/suggest/:category`,
       this.controller.getSuggestProducts.bind(this.controller)
     );
+    router.delete(
+      `/:categoryId`,
+      this.controller.deleteCategory.bind(this.controller)
+    );
     return router;
   }
 }

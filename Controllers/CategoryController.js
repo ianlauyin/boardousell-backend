@@ -82,6 +82,18 @@ class CategoryController {
     }
   };
 
+  deleteCategory = async (req, res) => {
+    const { categoryId } = req.params;
+    try {
+      const target = await this.category.findByPk(categoryId);
+      await target.setProducts([]);
+      await target.destroy();
+      return res.json("Deleted");
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   getAllCategory = async (req, res) => {
     try {
       const categoryList = await this.category.findAll({
