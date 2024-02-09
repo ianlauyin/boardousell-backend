@@ -21,6 +21,10 @@ class ProductRouter {
       this.controller.getAllProductName.bind(this.controller)
     );
     router.get(
+      "/search/all/:name",
+      this.controller.searchAllProduct.bind(this.controller)
+    );
+    router.get(
       `/admin/all/:page`,
       this.controller.adminGetAllProducts.bind(this.controller)
     );

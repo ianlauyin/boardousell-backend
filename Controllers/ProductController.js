@@ -21,6 +21,20 @@ class ProductController {
     return data;
   };
 
+  searchAllProduct = async (req, res) => {
+    const { name } = req.params;
+    try {
+      const data = await this.product.findAll({
+        where: { name: { [Op.iLike]: `%${name}%` } },
+        attributes: ["id", "name"],
+        order: [["name", "ASC"]],
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   createProduct = async (req, res) => {
     const newProduct = req.body;
     try {
