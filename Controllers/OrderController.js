@@ -95,14 +95,14 @@ class OrderController {
       const productDetailList = [];
       for (const [id, number] of Object.entries(product)) {
         const productDetail = await this.product.findByPk(id);
-        if (productDetail.stocks < number) {
-          throw new Error("Not Enough Stocks");
+        if (productDetail.stock < number) {
+          throw new Error("Not Enough stock");
         }
         productDetailList.push(productDetail);
       }
       for (const productDetail of productDetailList) {
-        const newAmount = productDetail.stocks - product[productDetail.id];
-        await productDetail.update({ stocks: newAmount });
+        const newAmount = productDetail.stock - product[productDetail.id];
+        await productDetail.update({ stock: newAmount });
       }
       const newOrder = await this.order.create({
         address,

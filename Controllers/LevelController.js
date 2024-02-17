@@ -5,6 +5,7 @@ class LevelController {
     this.level = db.level;
     this.user = db.user;
   }
+
   updateUserLevel = async (res) => {
     try {
       const levels = await this.level.findAll({

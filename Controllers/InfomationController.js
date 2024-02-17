@@ -28,20 +28,9 @@ class InfomationController {
     }
   };
 
-  adminGetAllInfo = async (req, res) => {
-    try {
-      const allInfo = await this.infomation.findAll();
-      return res.json(allInfo);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
   getAllInfo = async (req, res) => {
     try {
-      const allInfo = await this.infomation.findAll({
-        attributes: ["name", "detail"],
-      });
+      const allInfo = await this.infomation.findAll();
       return res.json(allInfo);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });

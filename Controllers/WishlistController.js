@@ -18,7 +18,7 @@ class WishlistController {
         include: [
           {
             model: this.product,
-            attributes: ["id", "name", "stocks", "price"],
+            attributes: ["id", "name", "stock", "price"],
             include: {
               model: this.onsale,
               attributes: ["discount"],
@@ -49,7 +49,7 @@ class WishlistController {
         include: [
           {
             model: this.product,
-            attributes: ["id", "name", "stocks", "price"],
+            attributes: ["id", "name", "stock", "price"],
             include: {
               model: this.onsale,
               attributes: ["discount"],

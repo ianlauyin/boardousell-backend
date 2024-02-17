@@ -9,6 +9,7 @@ class ProductController {
     this.category = db.category;
     this.resultPerPage = 5;
   }
+
   getAdminUpdateProduct = async (productId) => {
     const data = await this.product.findByPk(productId, {
       include: [
@@ -107,8 +108,8 @@ class ProductController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of product Id" });
     }
-    if (newInfo.stks && isNaN(Number(newInfo.stocks))) {
-      return res.status(400).json({ error: true, msg: "Wrong Type of stocks" });
+    if (newInfo.stks && isNaN(Number(newInfo.stock))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of stock" });
     }
     if (newInfo.price && isNaN(Number(newInfo.price))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of price" });
@@ -255,7 +256,7 @@ class ProductController {
     }
   };
 
-  adminSearchStocks = async (req, res) => {
+  adminSearchStock = async (req, res) => {
     const { amount, page } = req.params;
     if (isNaN(Number(page))) {
       return res.status(400).json({ error: true, msg: "Wrong Page" });
@@ -269,7 +270,7 @@ class ProductController {
     const lowerLimit = arr[0];
     const upperLimit = arr[1] ? arr[1] : arr[0];
     const condition = {
-      where: { stocks: { [Op.between]: [lowerLimit, upperLimit] } },
+      where: { stock: { [Op.between]: [lowerLimit, upperLimit] } },
     };
     const offset = page - 1;
     try {
@@ -358,7 +359,7 @@ class ProductController {
           ]
         : [];
       const data = await this.product.findAll({
-        attributes: ["id", "name", "price", "stocks", "description"],
+        attributes: ["id", "name", "price", "stock", "description"],
         order: [["createdAt", "DESC"]],
         include: [
           {
@@ -407,7 +408,7 @@ class ProductController {
     try {
       const products = await this.product.findAll({
         order: [["created_at", "DESC"]],
-        attributes: ["id", "price", "name", "stocks"],
+        attributes: ["id", "price", "name", "stock"],
         include: [
           {
             attributes: ["discount"],
@@ -466,7 +467,7 @@ class ProductController {
     try {
       const newProduct = await this.product.findAll({
         order: [["created_at", "DESC"]],
-        attributes: ["id", "price", "name", "stocks"],
+        attributes: ["id", "price", "name", "stock"],
         include: [
           {
             attributes: [],

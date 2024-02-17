@@ -38,7 +38,7 @@ class ProductRouter {
     );
     router.get(
       `/admin/stocks/:amount/:page`,
-      this.controller.adminSearchStocks.bind(this.controller)
+      this.controller.adminSearchStock.bind(this.controller)
     );
     router.get(
       `/admin/name/:name/:page`,
