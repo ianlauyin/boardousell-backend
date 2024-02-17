@@ -63,7 +63,7 @@ class CategoryController {
     }
   };
 
-  adminGetAllCategory = async (req, res) => {
+  getAllCategory = async (req, res) => {
     try {
       const data = await this.category.findAll();
       return res.json(data);
@@ -108,18 +108,6 @@ class CategoryController {
         joinTableAttributes: [],
       });
       return res.json(data);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  getAllCategory = async (req, res) => {
-    try {
-      const categoryList = await this.category.findAll({
-        attributes: ["name"],
-      });
-      const categories = categoryList.map((item) => item.name);
-      return res.json(categories);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

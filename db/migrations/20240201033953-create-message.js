@@ -16,7 +16,7 @@ module.exports = {
           key: "id",
         },
       },
-      is_user_received: {
+      is_user_receiver: {
         type: Sequelize.BOOLEAN,
       },
       detail: {

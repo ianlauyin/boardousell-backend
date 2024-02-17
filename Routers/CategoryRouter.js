@@ -7,10 +7,6 @@ class CategoryRouter {
   }
 
   routes() {
-    router.get(
-      `/admin/all`,
-      this.controller.adminGetAllCategory.bind(this.controller)
-    );
     router.get(`/all`, this.controller.getAllCategory.bind(this.controller));
     router.get(
       `/product/:categoryId`,

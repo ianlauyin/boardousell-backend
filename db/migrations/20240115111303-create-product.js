@@ -18,7 +18,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      stocks: {
+      stock: {
         type: Sequelize.INTEGER,
       },
       created_at: {

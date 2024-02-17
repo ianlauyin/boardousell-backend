@@ -18,7 +18,7 @@ module.exports = {
         name: "Marvel Champion",
         description:
           "Marvel Champions: The Card Game invites players to embody iconic heroes from the Marvel Universe as they battle to stop infamous villains from enacting their devious schemes.",
-        stocks: 10,
+        stock: 10,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -27,7 +27,7 @@ module.exports = {
         name: "Nemesis",
         description:
           "Nemesis is a semi-cooperative game in which you and your crewmates must survive on a ship infested with hostile organisms. To win the game, you have to complete one of the two objectives dealt to you at the start of the game and get back to Earth in one piece. You will find many obstacles on your way: swarms of Intruders (the name given to the alien organisms by the ship AI), the poor physical condition of the ship, agendas held by your fellow players, and sometimes just cruel fate.",
-        stocks: 5,
+        stock: 5,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -36,7 +36,7 @@ module.exports = {
         name: "Tiny Towns",
         description:
           "Plan well as you build your town one building at a time. Will it fit?",
-        stocks: 20,
+        stock: 20,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -45,7 +45,7 @@ module.exports = {
         name: "Marvel zombie",
         description:
           "Design the most appealing 1950s neighborhood, with fences, parks, and swimming pools.",
-        stocks: 1,
+        stock: 1,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -54,7 +54,7 @@ module.exports = {
         name: "Blackout: Hong Kong",
         description:
           "Manage ever-changing resources & a network of various specialists to save Hong Kong! ",
-        stocks: 3,
+        stock: 3,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -63,7 +63,7 @@ module.exports = {
         name: "Mansions of Madness",
         description:
           "Unravel mysteries in Arkham with your investigative team in this app-guided game",
-        stocks: 0,
+        stock: 0,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -72,7 +72,7 @@ module.exports = {
         name: "Welcome to...",
         description:
           "Design the most appealing 1950s neighborhood, with fences, parks, and swimming pools.",
-        stocks: 15,
+        stock: 15,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -81,7 +81,7 @@ module.exports = {
         name: "Bullet♥︎",
         description:
           "Space heroines defend Planet Earth in falling-block battles.",
-        stocks: 15,
+        stock: 15,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -90,7 +90,7 @@ module.exports = {
         name: "Zombicide",
         description:
           "Work together to kill zombies! Improve skills! Then kill more zombies!",
-        stocks: 15,
+        stock: 15,
         created_at: new Date(),
         updated_at: new Date(),
       },

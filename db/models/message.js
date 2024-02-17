@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         references: { model: "orders", key: "id" },
       },
-      isUserReceived: DataTypes.BOOLEAN,
+      isUserReceiver: DataTypes.BOOLEAN,
       detail: DataTypes.TEXT,
     },
     {
