@@ -7,7 +7,107 @@ class OrderController {
     this.user = db.user;
     this.level = db.level;
     this.message = db.message;
+    this.resultPerPage = 2;
   }
+
+  adminSortMessage = async (req, res) => {
+    const { sort, page } = req.query;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    if (!(sort === "ASC" || sort === "DESC")) {
+      return res.status(400).json({ error: true, msg: "Wrong Message Order" });
+    }
+    const offset = page - 1;
+    try {
+      const rawData = await this.order.findAll({
+        order: [[this.message, "createdAt", sort]],
+        include: [
+          { model: this.user, attributes: ["email", "name", "phone"] },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+          },
+          { model: this.message, required: true },
+        ],
+      });
+      const count = rawData.length;
+      const data = rawData.slice(
+        offset * this.resultPerPage,
+        page * this.resultPerPage
+      );
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  adminSearchStatus = async (req, res) => {
+    const { status, page } = req.query;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    const checkingStatus = [
+      "Pending",
+      "Paid",
+      "Ready",
+      "Shipped",
+      "Delivered",
+      "Cancelled",
+    ];
+    if (!checkingStatus.includes(status)) {
+      return res.status(400).json({ error: true, msg: "Wrong Status" });
+    }
+    const offset = page - 1;
+    try {
+      const count = await this.order.count({ where: { status: status } });
+      const data = await this.order.findAll({
+        where: { status: status },
+        include: [
+          { model: this.user, attributes: ["email", "name", "phone"] },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+          },
+
+          this.message,
+        ],
+        order: [["updatedAt", "DESC"]],
+        limit: this.resultPerPage,
+        offset: offset * this.resultPerPage,
+      });
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  adminGetOrder = async (req, res) => {
+    const { orderId } = req.params;
+    if (isNaN(Number(orderId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of orderID" });
+    }
+    try {
+      const data = await this.order.findByPk(orderId, {
+        include: [
+          { model: this.user, attributes: ["email", "name", "phone"] },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+          },
+          this.message,
+        ],
+      });
+      return res.json({ count: 1, data: [data] });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 
   paidOrder = async (req, res) => {
     const { orderId } = req.body;

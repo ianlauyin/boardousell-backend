@@ -8,6 +8,18 @@ class OrderRouter {
 
   routes() {
     router.get(
+      `/message`,
+      this.controller.adminSortMessage.bind(this.controller)
+    );
+    router.get(
+      `/status`,
+      this.controller.adminSearchStatus.bind(this.controller)
+    );
+    router.get(
+      `/admin/:orderId`,
+      this.controller.adminGetOrder.bind(this.controller)
+    );
+    router.get(
       `/all/:userId`,
       this.controller.getAllOrder.bind(this.controller)
     );
