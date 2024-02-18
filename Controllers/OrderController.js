@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 class OrderController {
   constructor(db) {
     this.order = db.order;
@@ -7,8 +8,76 @@ class OrderController {
     this.user = db.user;
     this.level = db.level;
     this.message = db.message;
-    this.resultPerPage = 2;
+    this.resultPerPage = 5;
   }
+
+  adminSearchProduct = async (req, res) => {
+    const { product, page } = req.query;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    const offset = page - 1;
+    try {
+      const rawData = await this.order.findAll({
+        include: [
+          {
+            model: this.user,
+            attributes: ["email", "name", "phone"],
+          },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+            where: { name: { [Op.iLike]: `%${product}%` } },
+          },
+          { model: this.message },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+      const count = rawData.length;
+      const data = rawData.slice(
+        offset * this.resultPerPage,
+        page * this.resultPerPage
+      );
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  adminSearchEmail = async (req, res) => {
+    const { email, page } = req.query;
+    if (isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    }
+    const offset = page - 1;
+    try {
+      const rawData = await this.order.findAll({
+        include: [
+          {
+            model: this.user,
+            attributes: ["email", "name", "phone"],
+            where: { email: { [Op.iLike]: `%${email}%` } },
+          },
+          {
+            model: this.product,
+            attributes: ["id", "name"],
+            through: { attributes: [] },
+          },
+          { model: this.message },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+      const count = rawData.length;
+      const data = rawData.slice(
+        offset * this.resultPerPage,
+        page * this.resultPerPage
+      );
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
 
   adminSortMessage = async (req, res) => {
     const { sort, page } = req.query;

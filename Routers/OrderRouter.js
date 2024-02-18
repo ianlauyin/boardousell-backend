@@ -8,6 +8,14 @@ class OrderRouter {
 
   routes() {
     router.get(
+      `/product`,
+      this.controller.adminSearchProduct.bind(this.controller)
+    );
+    router.get(
+      `/email`,
+      this.controller.adminSearchEmail.bind(this.controller)
+    );
+    router.get(
       `/message`,
       this.controller.adminSortMessage.bind(this.controller)
     );
