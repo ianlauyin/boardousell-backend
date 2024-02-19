@@ -7,7 +7,8 @@ class InfomationRouter {
   }
 
   routes() {
-    router.get(`/`, this.controller.getAllInfo.bind(this.controller));
+    router.post(`/`, this.controller.addInfo.bind(this.controller));
+    router.delete(`/:infoId`, this.controller.deleteInfo.bind(this.controller));
 
     return router;
   }

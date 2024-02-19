@@ -6,7 +6,7 @@ class WishlistController {
     this.onsale = db.onsale;
   }
 
-  getWishlists = async (req, res) => {
+  getWishlist = async (req, res) => {
     const { userId } = req.params;
     if (isNaN(Number(userId))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of userID" });

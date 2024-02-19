@@ -38,6 +38,16 @@ class LevelController {
     }
   };
 
+  findAllLevel = async (res) => {
+    try {
+      return await this.level.findAll({
+        order: [["requirement", "ASC"]],
+      });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   deleteLevel = async (req, res) => {
     const { levelId } = req.params;
     if (isNaN(Number(levelId))) {
@@ -52,19 +62,19 @@ class LevelController {
         { where: { levelId: levelId } }
       );
       await this.level.destroy({ where: { id: levelId } });
-      const data = await this.findAllData(res);
+      const data = await this.findAllLevel(res);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
-  postNewLevel = async (req, res) => {
+  addNewLevel = async (req, res) => {
     const newData = req.body;
     try {
       await this.level.create(newData);
       this.updateUserLevel(res);
-      const data = await this.findAllData(res);
+      const data = await this.findAllLevel(res);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
@@ -83,7 +93,7 @@ class LevelController {
       if ("requirement" in newData) {
         this.updateUserLevel(res);
       }
-      const data = await this.findAllData(res);
+      const data = await this.findAllLevel(res);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
@@ -92,18 +102,8 @@ class LevelController {
 
   getAllLevel = async (req, res) => {
     try {
-      const data = await this.findAllData(res);
+      const data = await this.findAllLevel(res);
       return res.json(data);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  findAllData = async (res) => {
-    try {
-      return await this.level.findAll({
-        order: [["requirement", "ASC"]],
-      });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

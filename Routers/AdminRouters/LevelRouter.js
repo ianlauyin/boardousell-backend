@@ -8,7 +8,7 @@ class LevelRouter {
 
   routes() {
     router.get(`/`, this.controller.getAllLevel.bind(this.controller));
-    router.post(`/`, this.controller.postNewLevel.bind(this.controller));
+    router.post(`/`, this.controller.addNewLevel.bind(this.controller));
     router.put(`/`, this.controller.updateLevelInfo.bind(this.controller));
     router.delete(
       `/:levelId`,

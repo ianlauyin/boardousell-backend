@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-class InfomationRouter {
+class MessageRouter {
   constructor(controller) {
     this.controller = controller;
   }
 
   routes() {
-    router.get(`/`, this.controller.getAllInfo.bind(this.controller));
-
+    router.post(`/`, this.controller.postMessage.bind(this.controller));
     return router;
   }
 }
 
-module.exports = InfomationRouter;
+module.exports = MessageRouter;

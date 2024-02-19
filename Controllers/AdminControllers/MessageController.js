@@ -4,16 +4,16 @@ class MessageController {
   }
 
   postMessage = async (req, res) => {
-    const { isUserReceiver, detail, orderId } = req.body;
-    if (isNaN(Number(orderId)) || typeof isUserReceiver !== "boolean") {
+    const { detail, orderId } = req.body;
+    if (isNaN(Number(orderId))) {
       return res
         .status(400)
-        .json({ error: true, msg: "Wrong Type of OrderID/Receiver/Sender" });
+        .json({ error: true, msg: "Wrong Type of OrderID" });
     }
     try {
       const newMsg = await this.message.create({
         orderId: orderId,
-        isUserReceiver: isUserReceiver,
+        isUserReceiver: true,
         detail: detail,
       });
       return res.json(newMsg);
