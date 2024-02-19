@@ -37,6 +37,10 @@ class OrderRouter {
     );
     router.post(`/`, this.controller.postOrder.bind(this.controller));
     router.put(`/paid`, this.controller.paidOrder.bind(this.controller));
+    router.put(
+      `/status`,
+      this.controller.updateOrderStatus.bind(this.controller)
+    );
 
     return router;
   }
