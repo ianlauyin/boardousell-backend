@@ -16,7 +16,7 @@ class ProductRouter {
       this.controller.searchCategory.bind(this.controller)
     );
     router.get(
-      `/stocks/:amount/:page`,
+      `/stock/:amount/:page`,
       this.controller.searchStock.bind(this.controller)
     );
     router.get(
