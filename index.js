@@ -13,7 +13,7 @@ const checkJwt = auth({
 
 const checkRole = claimIncludes("permissions", "update:shop_data");
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const db = require("./db/models/index");
 
 const adminPaths = [

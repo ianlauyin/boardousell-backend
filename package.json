@@ -27,6 +27,7 @@
     "stripe": "^14.14.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.2",
     "sequelize-cli": "^6.6.2"
   }
 }
