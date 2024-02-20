@@ -5,7 +5,6 @@ app.use(cors());
 app.use(express.json());
 const { auth, claimIncludes } = require("express-oauth2-jwt-bearer");
 require("dotenv").config();
-
 const checkJwt = auth({
   audience: process.env.AUTH_AUDIENCE,
   issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,

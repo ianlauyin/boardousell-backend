@@ -57,13 +57,15 @@ class ProductController {
       const count = await this.product.count({
         include: { model: this.category, where: { name: category } },
       });
-      const data = await this.product.findAll({
+      const categoryInfo = await this.category.findOne({
+        where: { name: category },
+      });
+      const data = await categoryInfo.getProducts({
         order: [["id", "DESC"]],
         include: [
           this.productPhoto,
           {
             model: this.category,
-            where: { name: category },
             through: { attributes: [] },
           },
           this.newproduct,
