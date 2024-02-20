@@ -3,13 +3,15 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-const { auth } = require("express-oauth2-jwt-bearer");
+const { auth, claimIncludes } = require("express-oauth2-jwt-bearer");
 require("dotenv").config();
 
 const checkJwt = auth({
   audience: process.env.AUTH_AUDIENCE,
   issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
 });
+
+const checkRole = claimIncludes("permissions", "update:shop_data");
 
 const port = process.env.PORT;
 const db = require("./db/models/index");
@@ -57,7 +59,7 @@ for (const path of adminPaths) {
   const Controller = require(`./Controllers/AdminControllers/${path}Controller`);
   const controller = new Controller(db);
   const router = new Router(controller).routes();
-  app.use(`/admin/${path.toLowerCase()}`, checkJwt, router);
+  app.use(`/admin/${path.toLowerCase()}`, checkJwt, checkRole, router);
 }
 
 app.listen(port, () => {

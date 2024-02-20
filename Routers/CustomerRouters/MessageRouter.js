@@ -7,7 +7,7 @@ class MessageRouter {
   }
 
   routes() {
-    router.post(`/`, this.controller.postMessage.bind(this.controller));
+    router.post(`/`, this.controller.postCustomerMessage.bind(this.controller));
     return router;
   }
 }

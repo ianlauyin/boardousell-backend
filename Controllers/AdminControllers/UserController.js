@@ -4,7 +4,7 @@ class UserController {
     this.level = db.level;
   }
 
-  updateUserPoints = async (req, res) => {
+  updateUserInfo = async (req, res) => {
     const { userId } = req.params;
     const newData = req.body;
     try {

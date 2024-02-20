@@ -10,7 +10,7 @@ class UserRouter {
     router.get(`/search`, this.controller.searchUser.bind(this.controller));
     router.put(
       `/:userId`,
-      this.controller.updateUserPoints.bind(this.controller)
+      this.controller.updateUserInfo.bind(this.controller)
     );
     return router;
   }

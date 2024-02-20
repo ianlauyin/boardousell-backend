@@ -3,7 +3,7 @@ class MessageController {
     this.message = db.message;
   }
 
-  postMessage = async (req, res) => {
+  postAdminMessage = async (req, res) => {
     const { detail, orderId } = req.body;
     if (isNaN(Number(orderId))) {
       return res

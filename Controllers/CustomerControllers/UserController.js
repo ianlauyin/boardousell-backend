@@ -10,6 +10,7 @@ class UserController {
       const user = await this.user.findOrCreate({
         where: { uuid: uuid },
       });
+      console.log("here");
       return res.json(user);
     } catch (error) {
       return res.status(400).send({ error: true, msg: error });

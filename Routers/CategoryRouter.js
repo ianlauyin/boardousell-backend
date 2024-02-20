@@ -9,7 +9,7 @@ class CategoryRouter {
   routes() {
     router.get(`/all`, this.controller.getAllCategory.bind(this.controller));
     router.get(
-      `/product/suggest/:category`,
+      `/suggest/:category`,
       this.controller.getSuggestProducts.bind(this.controller)
     );
     router.get(
