@@ -7,25 +7,19 @@ class ProductController {
     this.productPhoto = db.productPhoto;
     this.onsale = db.onsale;
     this.category = db.category;
-    this.resultPerPage = 5;
   }
 
-  getAdminUpdateProduct = async (productId) => {
-    const data = await this.product.findByPk(productId, {
-      include: [
-        this.productPhoto,
-        { model: this.category, through: { attributes: [] } },
-        this.newproduct,
-        this.onsale,
-      ],
-    });
-    return data;
-  };
-
   searchStock = async (req, res) => {
-    const { amount, page } = req.params;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
+    const { amount } = req.params;
+    const { limit, page } = req.query;
+    if (!!page && !limit) {
+      return res.status(400).json({ error: true, msg: "Require limit" });
+    }
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
+    }
+    if (!!page && isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of page" });
     }
     const arr = amount.split("-");
     for (const limit of arr) {
@@ -38,47 +32,20 @@ class ProductController {
     const condition = {
       where: { stock: { [Op.between]: [lowerLimit, upperLimit] } },
     };
-    const offset = page - 1;
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
       const count = await this.product.count(condition);
       const data = await this.product.findAll({
         ...condition,
-        order: [["id", "DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           this.productPhoto,
           { model: this.category, through: { attributes: [] } },
           this.newproduct,
           this.onsale,
         ],
-        limit: this.resultPerPage,
-        offset: offset * this.resultPerPage,
-      });
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  searchName = async (req, res) => {
-    const { name, page } = req.params;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    const offset = page - 1;
-    const condition = { where: { name: { [Op.iLike]: `%${name}%` } } };
-    try {
-      const count = await this.product.count(condition);
-      const data = await this.product.findAll({
-        ...condition,
-        order: [["id", "DESC"]],
-        include: [
-          this.productPhoto,
-          { model: this.category, through: { attributes: [] } },
-          this.newproduct,
-          this.onsale,
-        ],
-        limit: this.resultPerPage,
-        offset: offset * this.resultPerPage,
+        ...resultLimitation,
       });
       return res.json({ count: count, data: data });
     } catch (error) {
@@ -87,9 +54,38 @@ class ProductController {
   };
 
   createProduct = async (req, res) => {
-    const newProduct = req.body;
+    const { categories, isNewProduct, isOnsale, discount, ...newProduct } =
+      req.body;
+    if (isNaN(Number(newProduct.price))) {
+      return res.status(400).json({ error: true, msg: "Wrong type of Price" });
+    }
+    if (!!isOnsale && isNaN(Number(discount))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong type of discount" });
+    }
     try {
-      const data = await this.product.create(newProduct);
+      const product = await this.product.create(newProduct);
+      if (isNewProduct) {
+        await this.newproduct.create({ productId: product.id });
+      }
+      if (isOnsale) {
+        await this.onsale.create({ productId: product.id, discount });
+      }
+      const categoryInstances = [];
+      for (const name of categories) {
+        const category = await this.category.findOne({ where: { name: name } });
+        categoryInstances.push(category);
+      }
+      await product.setCategories(categoryInstances);
+      const data = await this.product.findByPk(product.id, {
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          this.onsale,
+        ],
+      });
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });

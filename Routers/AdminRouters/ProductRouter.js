@@ -8,15 +8,12 @@ class ProductRouter {
 
   routes() {
     router.get(
-      `/stock/:amount/:page`,
+      `/stock/:amount`,
       this.controller.searchStock.bind(this.controller)
     );
-    router.get(
-      `/name/:name/:page`,
-      this.controller.searchName.bind(this.controller)
-    );
-    router.post(`/create`, this.controller.createProduct.bind(this.controller));
+
     router.post(`/photo`, this.controller.addPhoto.bind(this.controller));
+    router.post(`/create`, this.controller.createProduct.bind(this.controller));
     router.put(
       `/photo/thumbnail`,
       this.controller.changeThumbnail.bind(this.controller)
