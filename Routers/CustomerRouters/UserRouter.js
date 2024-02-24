@@ -7,8 +7,7 @@ class UserRouter {
   }
 
   routes() {
-    router.get(`/login/:uuid`, this.controller.loginUser.bind(this.controller));
-    router.get(`/:userId`, this.controller.getUserInfo.bind(this.controller));
+    router.get(`/:uuid`, this.controller.getUserInfo.bind(this.controller));
     router.put(
       `/:userId`,
       this.controller.updateUserInfo.bind(this.controller)

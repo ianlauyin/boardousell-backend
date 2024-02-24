@@ -4,11 +4,13 @@ class UserController {
     this.level = db.level;
   }
 
-  loginUser = async (req, res) => {
+  getUserInfo = async (req, res) => {
     const { uuid } = req.params;
     try {
       const user = await this.user.findOrCreate({
         where: { uuid: uuid },
+        attributes: { exclude: ["uuid", "levelId"] },
+        include: this.level,
       });
       return res.json(user);
     } catch (error) {
@@ -24,22 +26,6 @@ class UserController {
         where: { id: userId },
       });
       return res.json("Update Okay");
-    } catch (error) {
-      return res.status(400).send({ error: true, msg: error });
-    }
-  };
-
-  getUserInfo = async (req, res) => {
-    const { userId } = req.params;
-    if (isNaN(Number(userId))) {
-      return res.status(400).json({ error: true, msg: "Wrong Type of userID" });
-    }
-    try {
-      const userInfo = await this.user.findByPk(userId, {
-        attributes: { exclude: ["uuid", "levelId", "isAdmin"] },
-        include: this.level,
-      });
-      return res.json(userInfo);
     } catch (error) {
       return res.status(400).send({ error: true, msg: error });
     }
