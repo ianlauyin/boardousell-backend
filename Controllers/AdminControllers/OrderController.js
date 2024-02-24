@@ -5,170 +5,148 @@ class OrderController {
     this.product = db.product;
     this.user = db.user;
     this.message = db.message;
-    this.resultPerPage = 5;
   }
 
-  searchProduct = async (req, res) => {
-    const { product, page } = req.query;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
+  searchOrder = async (req, res) => {
+    const { limit, page } = req.query;
+    if (!!page && !limit) {
+      return res.status(400).json({ error: true, msg: "Require limit" });
     }
-    const offset = page - 1;
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
+    }
+    if (!!page && isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of page" });
+    }
+    if (req.query.sort === "message") {
+      return this.sortMessage(page, limit, req.query.order, res);
+    }
+    if (req.query.product) {
+      return this.searchProduct(page, limit, req.query.product, res);
+    }
+    if (req.query.email) {
+      return this.searchEmail(page, limit, req.query.email, res);
+    }
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
+    if (req.query.id) {
+      if (isNaN(Number(req.query.id))) {
+        return res
+          .status(400)
+          .json({ error: true, msg: "Wrong Type of orderID" });
+      }
+      return this.searchOrderDetail(
+        resultLimitation,
+        { id: req.query.id },
+        res
+      );
+    }
+    if (req.query.status) {
+      const checkingStatus = [
+        "Pending",
+        "Paid",
+        "Ready",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+      ];
+      if (!checkingStatus.includes(req.query.status)) {
+        return res.status(400).json({ error: true, msg: "Wrong Status" });
+      }
+      return this.searchOrderDetail(
+        resultLimitation,
+        { status: req.query.status },
+        res
+      );
+    }
+    return res
+      .status(400)
+      .json({ error: true, msg: "Currently not supporting your search type." });
+  };
+
+  searchProduct = async (page, limit, keyword, res) => {
     try {
-      const rawData = await this.order.findAll({
+      const allData = await this.order.findAll({
         include: [
-          {
-            model: this.user,
-            attributes: ["email", "name", "phone"],
-          },
+          { model: this.user, attributes: { exclude: ["uuid"] } },
           {
             model: this.product,
-            attributes: ["id", "name"],
             through: { attributes: ["amount"] },
-            where: { name: { [Op.iLike]: `%${product}%` } },
+            where: { name: { [Op.iLike]: `%${keyword}%` } },
           },
           { model: this.message },
         ],
-        order: [["createdAt", "DESC"]],
+        order: [["updatedAt", "DESC"]],
       });
-      const count = rawData.length;
-      const data = rawData.slice(
-        offset * this.resultPerPage,
-        page * this.resultPerPage
-      );
-      return res.json({ count: count, data: data });
+      const data = allData.slice((page - 1) * limit, page * limit);
+      return res.json({ amount: allData.length, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
-  searchEmail = async (req, res) => {
-    const { email, page } = req.query;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    const offset = page - 1;
+  searchEmail = async (page, limit, keyword, res) => {
     try {
-      const rawData = await this.order.findAll({
+      const allData = await this.order.findAll({
         include: [
           {
             model: this.user,
-            attributes: ["email", "name", "phone"],
-            where: { email: { [Op.iLike]: `%${email}%` } },
+            attributes: { exclude: ["uuid"] },
+            where: { email: { [Op.iLike]: `%${keyword}%` } },
           },
           {
             model: this.product,
-            attributes: ["id", "name"],
-            through: { attributes: ["amount"] },
-          },
-          { model: this.message },
-        ],
-        order: [["createdAt", "DESC"]],
-      });
-      const count = rawData.length;
-      const data = rawData.slice(
-        offset * this.resultPerPage,
-        page * this.resultPerPage
-      );
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  searchStatus = async (req, res) => {
-    const { status, page } = req.query;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    const checkingStatus = [
-      "Pending",
-      "Paid",
-      "Ready",
-      "Shipped",
-      "Delivered",
-      "Cancelled",
-    ];
-    if (!checkingStatus.includes(status)) {
-      return res.status(400).json({ error: true, msg: "Wrong Status" });
-    }
-    const offset = page - 1;
-    try {
-      const count = await this.order.count({ where: { status: status } });
-      const data = await this.order.findAll({
-        where: { status: status },
-        include: [
-          { model: this.user, attributes: ["email", "name", "phone"] },
-          {
-            model: this.product,
-            attributes: ["id", "name"],
             through: { attributes: ["amount"] },
           },
           this.message,
         ],
         order: [["updatedAt", "DESC"]],
-        limit: this.resultPerPage,
-        offset: offset * this.resultPerPage,
       });
-      return res.json({ count: count, data: data });
+      const data = allData.slice((page - 1) * limit, page * limit);
+      return res.json({ amount: allData.length, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
-  sortMessage = async (req, res) => {
-    const { sort, page } = req.query;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    if (!(sort === "ASC" || sort === "DESC")) {
-      return res.status(400).json({ error: true, msg: "Wrong Message Order" });
-    }
-    const offset = page - 1;
+  searchOrderDetail = async (limitation, searchObject, res) => {
     try {
-      const rawData = await this.order.findAll({
-        order: [[this.message, "createdAt", sort]],
+      const count = await this.order.count({ where: searchObject });
+      const data = await this.order.findAll({
+        where: searchObject,
         include: [
-          { model: this.user, attributes: ["email", "name", "phone"] },
+          { model: this.user, attributes: { exclude: ["uuid"] } },
           {
             model: this.product,
-            attributes: ["id", "name"],
-            through: { attributes: ["amount"] },
-          },
-          { model: this.message, required: true },
-        ],
-      });
-      const count = rawData.length;
-      const data = rawData.slice(
-        offset * this.resultPerPage,
-        page * this.resultPerPage
-      );
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  getOrder = async (req, res) => {
-    const { orderId } = req.params;
-    if (isNaN(Number(orderId))) {
-      return res
-        .status(400)
-        .json({ error: true, msg: "Wrong Type of orderID" });
-    }
-    try {
-      const data = await this.order.findByPk(orderId, {
-        include: [
-          { model: this.user, attributes: ["email", "name", "phone"] },
-          {
-            model: this.product,
-            attributes: ["id", "name"],
             through: { attributes: ["amount"] },
           },
           this.message,
         ],
+        order: [["updatedAt", "DESC"]],
+        ...limitation,
       });
-      return res.json({ count: 1, data: [data] });
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
+  sortMessage = async (page, limit, order, res) => {
+    if (!(order === "ASC" || order === "DESC")) {
+      return res.status(400).json({ error: true, msg: "Wrong Message Order" });
+    }
+    try {
+      //Sequelize does not support limit after sort for association order
+      const allData = await this.order.findAll({
+        order: [[this.message, "createdAt", order]],
+        include: [
+          { model: this.user, attributes: { exclude: ["uuid"] } },
+          { model: this.product, through: ["amount"] },
+          { model: this.message, required: true },
+        ],
+      });
+      const data = allData.slice((page - 1) * limit, page * limit);
+      return res.json({ amount: allData.length, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -207,12 +185,8 @@ class OrderController {
       await order.update({ status });
       const data = await this.order.findByPk(orderId, {
         include: [
-          { model: this.user, attributes: ["email", "name", "phone"] },
-          {
-            model: this.product,
-            attributes: ["id", "name"],
-            through: { attributes: ["amount"] },
-          },
+          { model: this.user, attributes: { exclude: ["uuid"] } },
+          { model: this.product, through: ["amount"] },
           this.message,
         ],
       });
