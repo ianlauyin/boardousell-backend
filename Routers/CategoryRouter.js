@@ -7,15 +7,7 @@ class CategoryRouter {
   }
 
   routes() {
-    router.get(`/all`, this.controller.getAllCategory.bind(this.controller));
-    router.get(
-      `/suggest/:category`,
-      this.controller.getSuggestProducts.bind(this.controller)
-    );
-    router.get(
-      `/product/:categoryId`,
-      this.controller.getRelatedProducts.bind(this.controller)
-    );
+    router.get(`/`, this.controller.getCategories.bind(this.controller));
 
     return router;
   }

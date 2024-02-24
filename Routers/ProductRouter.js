@@ -7,12 +7,17 @@ class ProductRouter {
   }
 
   routes() {
+    router.get(
+      "/category/:categoryId",
+      this.controller.getCategoryProduct.bind(this.controller)
+    );
     router.get("/search", this.controller.searchProduct.bind(this.controller));
     router.get(
       "/onsale",
-      this.controller.getOnsaleProduct.bind(this.controller)
+      this.controller.getOnsaleProducts.bind(this.controller)
     );
-    router.get("/new", this.controller.getNewProduct.bind(this.controller));
+    router.get("/new", this.controller.getNewProducts.bind(this.controller));
+
     router.get(
       "/:productId",
       this.controller.getProductInfo.bind(this.controller)

@@ -9,6 +9,31 @@ class ProductController {
     this.category = db.category;
   }
 
+  getCategoryProduct = async (req, res) => {
+    const { categoryId } = req.params;
+    const { limit } = req.query;
+    if (isNaN(Number(categoryId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Category Id" });
+    }
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
+    }
+    try {
+      const category = await this.category.findByPk(categoryId);
+      const data = await category.getProducts({
+        order: [["createdAt", "DESC"]],
+        joinTableAttributes: [],
+        include: [this.productPhoto, this.onsale],
+        limit: limit ? limit : null,
+      });
+      return res.json(data);
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   searchProduct = async (req, res) => {
     const { keyword, page, limit } = req.query;
     if (!!page && !limit) {
@@ -39,7 +64,7 @@ class ProductController {
           this.productPhoto,
           this.onsale,
         ],
-        order: [["created_at", "DESC"]],
+        order: [["createdAt", "DESC"]],
         ...resultLimitation,
       });
       return res.json({ amount: count, data: data });
@@ -48,10 +73,10 @@ class ProductController {
     }
   };
 
-  getOnsaleProduct = async (req, res) => {
+  getOnsaleProducts = async (req, res) => {
     try {
       const products = await this.product.findAll({
-        order: [["created_at", "DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: this.onsale,
@@ -68,10 +93,10 @@ class ProductController {
     }
   };
 
-  getNewProduct = async (req, res) => {
+  getNewProducts = async (req, res) => {
     try {
       const products = await this.product.findAll({
-        order: [["created_at", "DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: this.newproduct,
@@ -81,7 +106,6 @@ class ProductController {
           this.onsale,
         ],
       });
-      console.log(products);
       return res.json(products);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
