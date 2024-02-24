@@ -7,20 +7,8 @@ class CategoryController {
     this.newproduct = db.newproduct;
   }
 
-  getAdminUpdateProduct = async (productId) => {
-    const data = await this.product.findByPk(productId, {
-      include: [
-        this.productPhoto,
-        { model: this.category, through: { attributes: [] } },
-        this.newproduct,
-        this.onsale,
-      ],
-    });
-    return data;
-  };
-
   changeRelationWithProduct = async (req, res) => {
-    const { link, category, productId } = req.body;
+    const { relation, categoryId, productId } = req.body;
     if (isNaN(Number(productId))) {
       return res
         .status(400)
@@ -28,16 +16,14 @@ class CategoryController {
     }
     try {
       const product = await this.product.findByPk(productId);
-      const categoryInfo = await this.category.findOne({
-        where: { name: category },
-      });
-      if (link) {
+      const categoryInfo = await this.category.findByPk(categoryId);
+      if (relation) {
         await product.addCategories(categoryInfo);
+        return res.json(categoryInfo);
       } else {
-        await product.removeCategories(categoryInfo);
+        await product.setCategories([]);
+        return res.json("Updated");
       }
-      const data = await this.getAdminUpdateProduct(productId);
-      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

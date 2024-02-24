@@ -93,7 +93,8 @@ class ProductController {
   };
 
   addPhoto = async (req, res) => {
-    if (isNaN(Number(req.body.productId))) {
+    const { productId } = req.body;
+    if (isNaN(Number(productId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of Product Id" });
@@ -101,13 +102,12 @@ class ProductController {
     const newPhotoData = req.body;
     try {
       const checking = await this.productPhoto.count({
-        where: { productId: req.body.productId },
+        where: { productId: productId },
       });
-      await this.productPhoto.create({
+      const data = await this.productPhoto.create({
         ...newPhotoData,
         ...(checking === 0 && { thumbnail: true }),
       });
-      const data = await this.getAdminUpdateProduct(req.body.productId);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
@@ -115,68 +115,65 @@ class ProductController {
   };
 
   updateOnsale = async (req, res) => {
-    const { productId } = req.params;
-    const { isNew } = req.body;
+    const { relation, productId } = req.body;
     if (isNaN(Number(productId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of product Id" });
     }
     try {
-      if (isNew) {
+      if (relation) {
         const checking = await this.onsale.findOne({
           where: { productId: productId },
         });
         if (checking) {
           throw new Error("Already exist");
         }
-        await this.onsale.create({ productId });
+        const data = await this.onsale.create({ productId });
+        return res.json(data);
       } else {
         await this.onsale.destroy({ where: { productId: productId } });
+        return res.json("Updated");
       }
-      const data = await this.getAdminUpdateProduct(productId);
-      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
   updateNewProduct = async (req, res) => {
-    const { productId } = req.params;
-    const { isNew } = req.body;
+    const { relation, productId } = req.body;
     if (isNaN(Number(productId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of product Id" });
     }
     try {
-      if (isNew) {
+      if (relation) {
         const checking = await this.newproduct.findOne({
           where: { productId: productId },
         });
         if (checking) {
           throw new Error("Already exist");
         }
-        await this.newproduct.create({ productId });
+        const data = await this.newproduct.create({ productId });
+        return res.json(data);
       } else {
         await this.newproduct.destroy({ where: { productId: productId } });
+        return res.json("Updated");
       }
-      const data = await this.getAdminUpdateProduct(productId);
-      return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
   updateProductInfo = async (req, res) => {
-    const { productId } = req.params;
-    const newInfo = req.body;
+    const { productId, ...newInfo } = req.body;
     if (isNaN(Number(productId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of product Id" });
     }
-    if (newInfo.stks && isNaN(Number(newInfo.stock))) {
+    if (newInfo.stock && isNaN(Number(newInfo.stock))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of stock" });
     }
     if (newInfo.price && isNaN(Number(newInfo.price))) {
@@ -184,7 +181,14 @@ class ProductController {
     }
     try {
       await this.product.update(newInfo, { where: { id: productId } });
-      const data = await this.getAdminUpdateProduct(productId);
+      const data = await this.product.findByPk(productId, {
+        include: [
+          this.productPhoto,
+          { model: this.category, through: { attributes: [] } },
+          this.newproduct,
+          this.onsale,
+        ],
+      });
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
@@ -192,27 +196,18 @@ class ProductController {
   };
 
   updateDiscount = async (req, res) => {
-    const { onsaleId } = req.params;
-    const { discount } = req.body;
+    const { discount, onsaleId } = req.body;
     if (isNaN(Number(onsaleId) || isNaN(Number(discount)))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of onsale Id/discount" });
     }
     try {
-      await this.onsale.update(
+      const data = await this.onsale.update(
         { discount: discount },
-        { where: { id: onsaleId } }
+        { where: { id: onsaleId }, returning: true }
       );
-      const data = await this.product.findOne({
-        include: [
-          this.productPhoto,
-          { model: this.category, through: { attributes: [] } },
-          this.newproduct,
-          { model: this.onsale, where: { id: onsaleId } },
-        ],
-      });
-      return res.json(data);
+      return res.json(data[1][0]);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -228,16 +223,18 @@ class ProductController {
     try {
       const photo = await this.productPhoto.findByPk(photoId);
       const { productId } = photo;
-      await this.productPhoto.update(
+      const oldThumbnail = await this.productPhoto.update(
         { thumbnail: false },
-        { where: { productId: productId } }
+        {
+          where: { [Op.and]: [{ productId: productId }, { thumbnail: true }] },
+          returning: true,
+        }
       );
       await this.productPhoto.update(
         { thumbnail: true },
         { where: { id: photoId } }
       );
-      const data = await this.getAdminUpdateProduct(productId);
-      return res.json(data);
+      return res.json({ oldThumbnailPhotoId: oldThumbnail[1][0].id });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -264,8 +261,7 @@ class ProductController {
         }
       }
       await target.destroy();
-      const data = await this.getAdminUpdateProduct(productId);
-      return res.json(data);
+      return res.json("Deleted");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
