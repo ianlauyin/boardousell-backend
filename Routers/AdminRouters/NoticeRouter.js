@@ -11,10 +11,6 @@ class NoticeRouter {
     router.put(`/photo`, this.controller.changePhoto.bind(this.controller));
     router.put(`/`, this.controller.updateNotice.bind(this.controller));
     router.delete(
-      `/photo/:noticeId`,
-      this.controller.deletePhoto.bind(this.controller)
-    );
-    router.delete(
       `/delete/:noticeId`,
       this.controller.deleteNotice.bind(this.controller)
     );

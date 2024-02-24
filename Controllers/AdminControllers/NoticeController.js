@@ -13,16 +13,19 @@ class NoticeController {
     }
   };
 
-  deleteNotice = async (req, res) => {
-    const { noticeId } = req.params;
+  changePhoto = async (req, res) => {
+    const { noticeId, url } = req.body;
     if (isNaN(Number(noticeId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of noticeId" });
     }
     try {
-      await this.notice.destroy({ where: { id: noticeId } });
-      return res.json("Deleted");
+      const data = await this.notice.update(
+        { url: url },
+        { where: { id: noticeId }, returning: true }
+      );
+      return res.json(data[1][0]);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -36,15 +39,17 @@ class NoticeController {
         .json({ error: true, msg: "Wrong Type of noticeId" });
     }
     try {
-      await this.notice.update(newInfo, { where: { id: noticeId } });
-      const data = await this.notice.findByPk(noticeId);
-      return res.json(data);
+      const data = await this.notice.update(newInfo, {
+        where: { id: noticeId },
+        returning: true,
+      });
+      return res.json(data[1][0]);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
-  deletePhoto = async (req, res) => {
+  deleteNotice = async (req, res) => {
     const { noticeId } = req.params;
     if (isNaN(Number(noticeId))) {
       return res
@@ -52,25 +57,8 @@ class NoticeController {
         .json({ error: true, msg: "Wrong Type of noticeId" });
     }
     try {
-      await this.notice.update({ url: null }, { where: { id: noticeId } });
-      const data = await this.notice.findByPk(noticeId);
-      return res.json(data);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  changePhoto = async (req, res) => {
-    const { noticeId, url } = req.body;
-    if (isNaN(Number(noticeId))) {
-      return res
-        .status(400)
-        .json({ error: true, msg: "Wrong Type of noticeId" });
-    }
-    try {
-      await this.notice.update({ url: url }, { where: { id: noticeId } });
-      const data = await this.notice.findByPk(noticeId);
-      return res.json(data);
+      await this.notice.destroy({ where: { id: noticeId } });
+      return res.json("Deleted");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
