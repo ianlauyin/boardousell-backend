@@ -22,64 +22,6 @@ class ProductController {
     return data;
   };
 
-  getAllProducts = async (req, res) => {
-    const { page } = req.params;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    try {
-      const offset = page - 1;
-      const count = await this.product.count();
-      const data = await this.product.findAll({
-        order: [["id", "DESC"]],
-        include: [
-          this.productPhoto,
-          { model: this.category, through: { attributes: [] } },
-          this.newproduct,
-          this.onsale,
-        ],
-        limit: this.resultPerPage,
-        offset: offset * this.resultPerPage,
-      });
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
-  searchCategory = async (req, res) => {
-    const { category, page } = req.params;
-    if (isNaN(Number(page))) {
-      return res.status(400).json({ error: true, msg: "Wrong Page" });
-    }
-    const offset = page - 1;
-    try {
-      const count = await this.product.count({
-        include: { model: this.category, where: { name: category } },
-      });
-      const categoryInfo = await this.category.findOne({
-        where: { name: category },
-      });
-      const data = await categoryInfo.getProducts({
-        order: [["id", "DESC"]],
-        include: [
-          this.productPhoto,
-          {
-            model: this.category,
-            through: { attributes: [] },
-          },
-          this.newproduct,
-          this.onsale,
-        ],
-        limit: this.resultPerPage,
-        offset: offset * this.resultPerPage,
-      });
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
   searchStock = async (req, res) => {
     const { amount, page } = req.params;
     if (isNaN(Number(page))) {

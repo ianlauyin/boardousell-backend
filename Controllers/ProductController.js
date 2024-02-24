@@ -9,38 +9,44 @@ class ProductController {
     this.category = db.category;
   }
 
-  getCategoryProduct = async (req, res) => {
+  getCategoryProducts = async (req, res) => {
     const { categoryId } = req.params;
-    const { limit } = req.query;
+    const { limit, page } = req.query;
     if (isNaN(Number(categoryId))) {
       return res
         .status(400)
         .json({ error: true, msg: "Wrong Type of Category Id" });
     }
+    if (!!page && !limit) {
+      return res.status(400).json({ error: true, msg: "Require limit" });
+    }
     if (!!limit && isNaN(Number(limit))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
     }
+    if (!!page && isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of page" });
+    }
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
       const category = await this.category.findByPk(categoryId);
+      const count = await category.countProducts();
       const data = await category.getProducts({
         order: [["createdAt", "DESC"]],
         joinTableAttributes: [],
-        include: [this.productPhoto, this.onsale],
-        limit: limit ? limit : null,
+        include: [this.productPhoto, this.onsale, this.newproduct],
+        ...resultLimitation,
       });
-      return res.json(data);
+      return res.json({ amount: count, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
   };
 
-  searchProduct = async (req, res) => {
+  searchProducts = async (req, res) => {
     const { keyword, page, limit } = req.query;
     if (!!page && !limit) {
       return res.status(400).json({ error: true, msg: "Require limit" });
-    }
-    if (!page && !!limit) {
-      return res.status(400).json({ error: true, msg: "Require page" });
     }
     if (!!page && isNaN(Number(page))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of page" });
@@ -48,12 +54,12 @@ class ProductController {
     if (!!limit && isNaN(Number(limit))) {
       return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
     }
+    const searchObject = keyword
+      ? { name: { [Op.iLike]: `%${keyword}%` } }
+      : {};
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
-      const searchObject = keyword
-        ? { name: { [Op.iLike]: `%${keyword}%` } }
-        : {};
-      const resultLimitation =
-        !!page && !!limit ? { offset: (page - 1) * limit, limit: limit } : {};
       const count = await this.product.count({
         where: searchObject,
       });
@@ -63,6 +69,7 @@ class ProductController {
           { model: this.category, through: { attributes: [] } },
           this.productPhoto,
           this.onsale,
+          this.newproduct,
         ],
         order: [["createdAt", "DESC"]],
         ...resultLimitation,

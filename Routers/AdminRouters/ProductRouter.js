@@ -8,14 +8,6 @@ class ProductRouter {
 
   routes() {
     router.get(
-      `/all/:page`,
-      this.controller.getAllProducts.bind(this.controller)
-    );
-    router.get(
-      `/category/:category/:page`,
-      this.controller.searchCategory.bind(this.controller)
-    );
-    router.get(
       `/stock/:amount/:page`,
       this.controller.searchStock.bind(this.controller)
     );

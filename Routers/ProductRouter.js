@@ -9,9 +9,9 @@ class ProductRouter {
   routes() {
     router.get(
       "/category/:categoryId",
-      this.controller.getCategoryProduct.bind(this.controller)
+      this.controller.getCategoryProducts.bind(this.controller)
     );
-    router.get("/search", this.controller.searchProduct.bind(this.controller));
+    router.get("/search", this.controller.searchProducts.bind(this.controller));
     router.get(
       "/onsale",
       this.controller.getOnsaleProducts.bind(this.controller)
