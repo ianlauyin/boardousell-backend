@@ -3,25 +3,18 @@ class NoticeController {
     this.notice = db.notice;
   }
 
-  getAllNotices = async (req, res) => {
-    try {
-      const allNotices = await this.notice.findAll({
-        order: [["created_at", "DESC"]],
-      });
-      return res.json(allNotices);
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
+  getNotices = async (req, res) => {
+    const { limit } = req.query;
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong type of limit" });
     }
-  };
-
-  getNewestNotices = async (req, res) => {
     try {
-      const newestNotices = await this.notice.findAll({
+      const notices = await this.notice.findAll({
         order: [["created_at", "DESC"]],
-        limit: 3,
+        limit: limit ? limit : null,
         attributes: ["id", "title", "url"],
       });
-      return res.json(newestNotices);
+      return res.json(notices);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

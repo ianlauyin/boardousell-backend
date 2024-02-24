@@ -7,11 +7,7 @@ class NoticeRouter {
   }
 
   routes() {
-    router.get(
-      "/newest",
-      this.controller.getNewestNotices.bind(this.controller)
-    );
-    router.get("/", this.controller.getAllNotices.bind(this.controller));
+    router.get("/", this.controller.getNotices.bind(this.controller));
     return router;
   }
 }
