@@ -36,9 +36,10 @@ class ProductController {
     const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
       const count = await this.product.count(condition);
+
       const data = await this.product.findAll({
         ...condition,
-        order: [["createdAt", "DESC"]],
+        order: [["stock", "DESC"]],
         include: [
           this.productPhoto,
           { model: this.category, through: { attributes: [] } },
@@ -47,7 +48,7 @@ class ProductController {
         ],
         ...resultLimitation,
       });
-      return res.json({ count: count, data: data });
+      return res.json({ amount: count, data: data });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

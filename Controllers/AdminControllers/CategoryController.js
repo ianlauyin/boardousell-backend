@@ -14,6 +14,11 @@ class CategoryController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of Product Id" });
     }
+    if (isNaN(Number(productId))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Wrong Type of Category Id" });
+    }
     try {
       const product = await this.product.findByPk(productId);
       const categoryInfo = await this.category.findByPk(categoryId);
@@ -30,6 +35,9 @@ class CategoryController {
 
   addCategory = async (req, res) => {
     const newCategory = req.body;
+    if (!newCategory.name) {
+      return res.status(400).json({ error: true, msg: "Need data to create" });
+    }
     try {
       const data = await this.category.create(newCategory);
       return res.json(data);

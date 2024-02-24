@@ -34,7 +34,12 @@ class ProductController {
       const data = await category.getProducts({
         order: [["createdAt", "DESC"]],
         joinTableAttributes: [],
-        include: [this.productPhoto, this.onsale, this.newproduct],
+        include: [
+          this.productPhoto,
+          this.onsale,
+          this.newproduct,
+          this.category,
+        ],
         ...resultLimitation,
       });
       return res.json({ amount: count, data: data });
