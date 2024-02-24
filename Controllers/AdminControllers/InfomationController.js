@@ -5,6 +5,11 @@ class InfomationController {
 
   addInfo = async (req, res) => {
     const newInfo = req.body;
+    if (!newInfo) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Need Data to Add Contact" });
+    }
     try {
       const data = await this.infomation.create(newInfo);
       return res.json(data);

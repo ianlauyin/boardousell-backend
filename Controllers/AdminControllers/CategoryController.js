@@ -19,11 +19,10 @@ class CategoryController {
       const categoryInfo = await this.category.findByPk(categoryId);
       if (relation) {
         await product.addCategories(categoryInfo);
-        return res.json(categoryInfo);
       } else {
         await product.setCategories([]);
-        return res.json("Updated");
       }
+      return res.json("Updated");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }

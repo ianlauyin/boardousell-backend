@@ -15,7 +15,7 @@ class LevelController {
       await this.user.update(
         { levelId: levels[0].id },
         {
-          where: { points: { [Op.between]: [0, levels[1].requirement] } },
+          where: { points: { [Op.between]: [0, levels[0].requirement] } },
         }
       );
       for (let i = 1; i < levels.length; i++) {
@@ -38,16 +38,6 @@ class LevelController {
     }
   };
 
-  findAllLevel = async (res) => {
-    try {
-      return await this.level.findAll({
-        order: [["requirement", "ASC"]],
-      });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
   deleteLevel = async (req, res) => {
     const { levelId } = req.params;
     if (isNaN(Number(levelId))) {
@@ -56,14 +46,9 @@ class LevelController {
         .json({ error: true, msg: "Wrong Type of levelID" });
     }
     try {
-      const randomLevel = await this.level.findOne();
-      await this.user.update(
-        { levelId: randomLevel.id },
-        { where: { levelId: levelId } }
-      );
       await this.level.destroy({ where: { id: levelId } });
-      const data = await this.findAllLevel(res);
-      return res.json(data);
+      await this.updateUserLevel(res);
+      return res.json("Deleted");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -71,10 +56,20 @@ class LevelController {
 
   addNewLevel = async (req, res) => {
     const newData = req.body;
+    if (!newData.requirement || isNaN(Number(newData.requirement))) {
+      return res
+        .status(400)
+        .json({ error: true, msg: "Must have requierment" });
+    }
+    if (!newData.requirement || isNaN(Number(newData.requirement))) {
+      return res.status(400).json({ error: true, msg: "Must have discount" });
+    }
+    if (!newData.title) {
+      return res.status(400).json({ error: true, msg: "Must have title" });
+    }
     try {
-      await this.level.create(newData);
-      this.updateUserLevel(res);
-      const data = await this.findAllLevel(res);
+      const data = await this.level.create(newData);
+      await this.updateUserLevel(res);
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
@@ -89,12 +84,14 @@ class LevelController {
         .json({ error: true, msg: "Wrong Type of levelID" });
     }
     try {
-      await this.level.update(newData, { where: { id: id } });
+      const data = await this.level.update(newData, {
+        where: { id: id },
+        returning: true,
+      });
       if ("requirement" in newData) {
         this.updateUserLevel(res);
       }
-      const data = await this.findAllLevel(res);
-      return res.json(data);
+      return res.json(data[1][0]);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -102,7 +99,7 @@ class LevelController {
 
   getAllLevel = async (req, res) => {
     try {
-      const data = await this.findAllLevel(res);
+      const data = await this.level.findAll();
       return res.json(data);
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
