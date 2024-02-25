@@ -99,6 +99,7 @@ class ProductController {
     const offset = page ? (page - 1) * limit : 0;
     const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
+      const count = await this.onsale.count();
       const products = await this.product.findAll({
         order: [["createdAt", "DESC"]],
         include: [
@@ -112,7 +113,7 @@ class ProductController {
         ],
         ...resultLimitation,
       });
-      return res.json(products);
+      return res.json({ amount: count, data: products });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
@@ -132,6 +133,7 @@ class ProductController {
     const offset = page ? (page - 1) * limit : 0;
     const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
+      const count = await this.newproduct.count();
       const products = await this.product.findAll({
         order: [["createdAt", "DESC"]],
         include: [
@@ -144,7 +146,7 @@ class ProductController {
         ],
         ...resultLimitation,
       });
-      return res.json(products);
+      return res.json({ amount: count, data: products });
     } catch (error) {
       return res.status(400).json({ error: true, msg: error });
     }
