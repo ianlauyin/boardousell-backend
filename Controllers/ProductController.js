@@ -86,6 +86,18 @@ class ProductController {
   };
 
   getOnsaleProducts = async (req, res) => {
+    const { page, limit } = req.query;
+    if (!!page && !limit) {
+      return res.status(400).json({ error: true, msg: "Require limit" });
+    }
+    if (!!page && isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of page" });
+    }
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
+    }
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
       const products = await this.product.findAll({
         order: [["createdAt", "DESC"]],
@@ -98,6 +110,7 @@ class ProductController {
             model: this.productPhoto,
           },
         ],
+        ...resultLimitation,
       });
       return res.json(products);
     } catch (error) {
@@ -106,6 +119,18 @@ class ProductController {
   };
 
   getNewProducts = async (req, res) => {
+    const { page, limit } = req.query;
+    if (!!page && !limit) {
+      return res.status(400).json({ error: true, msg: "Require limit" });
+    }
+    if (!!page && isNaN(Number(page))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of page" });
+    }
+    if (!!limit && isNaN(Number(limit))) {
+      return res.status(400).json({ error: true, msg: "Wrong Type of limit" });
+    }
+    const offset = page ? (page - 1) * limit : 0;
+    const resultLimitation = !!limit ? { offset: offset, limit: limit } : {};
     try {
       const products = await this.product.findAll({
         order: [["createdAt", "DESC"]],
@@ -117,6 +142,7 @@ class ProductController {
           this.productPhoto,
           this.onsale,
         ],
+        ...resultLimitation,
       });
       return res.json(products);
     } catch (error) {
