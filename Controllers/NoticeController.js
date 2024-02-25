@@ -12,7 +12,6 @@ class NoticeController {
       const notices = await this.notice.findAll({
         order: [["created_at", "DESC"]],
         limit: limit ? limit : null,
-        attributes: ["id", "title", "url"],
       });
       return res.json(notices);
     } catch (error) {
