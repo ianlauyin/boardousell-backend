@@ -23,6 +23,7 @@ class UserController {
           prevId = id;
         }
       }
+      console.log(newData);
       await this.user.update(newData, {
         where: { id: userId },
       });

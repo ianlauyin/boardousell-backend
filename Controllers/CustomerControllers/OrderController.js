@@ -80,10 +80,21 @@ class OrderController {
       const newPoints = user.points + order.amount;
       await user.update({
         points: newPoints,
-        ...(newPoints >= user.level.requirement && {
-          levelId: user.levelId + 1,
-        }),
       });
+      const levelInfo = await this.level.findAll({
+        attributes: ["id", "requirement"],
+        order: [["requirement", "DESC"]],
+      });
+      user.levelId = 1;
+      let prevId = levelInfo[0].id;
+      for (const { id, requirement } of levelInfo) {
+        if (user.points >= requirement) {
+          user.levelId = prevId;
+          break;
+        }
+        prevId = id;
+      }
+      user.save();
       return res.json("Success");
     } catch (error) {
       return res.status(400).json({ error: true, msg: error.message });
