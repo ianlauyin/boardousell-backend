@@ -4,9 +4,10 @@ class LevelController {
   constructor(db) {
     this.level = db.level;
     this.user = db.user;
+    this.sequelize = db.sequelize;
   }
 
-  updateUserLevel = async (res) => {
+  updateUserLevel = async (res, t) => {
     try {
       const levels = await this.level.findAll({
         attributes: ["id", "requirement"],
@@ -16,6 +17,7 @@ class LevelController {
         { levelId: levels[0].id },
         {
           where: { points: { [Op.between]: [0, levels[0].requirement] } },
+          transaction: t,
         }
       );
       for (let i = 1; i < levels.length; i++) {
@@ -30,6 +32,7 @@ class LevelController {
                 ],
               },
             },
+            transaction: t,
           }
         );
       }
@@ -45,11 +48,14 @@ class LevelController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of levelID" });
     }
+    const t = this.sequelize.transaction();
     try {
-      await this.level.destroy({ where: { id: levelId } });
-      await this.updateUserLevel(res);
+      await this.level.destroy({ where: { id: levelId }, transaction: t });
+      await this.updateUserLevel(res, t);
+      await t.commit();
       return res.json("Deleted");
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };
@@ -67,11 +73,14 @@ class LevelController {
     if (!newData.title) {
       return res.status(400).json({ error: true, msg: "Must have title" });
     }
+    const t = this.sequelize.transaction();
     try {
-      const data = await this.level.create(newData);
-      await this.updateUserLevel(res);
+      const data = await this.level.create(newData, { transaction: t });
+      await this.updateUserLevel(res, t);
+      await t.commit();
       return res.json(data);
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };
@@ -83,13 +92,15 @@ class LevelController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of levelID" });
     }
+    const t = this.sequelize.transaction();
     try {
       const data = await this.level.update(newData, {
         where: { id: id },
+        transaction: t,
         returning: true,
       });
       if ("requirement" in newData) {
-        this.updateUserLevel(res);
+        this.updateUserLevel(res, t);
       }
       return res.json(data[1][0]);
     } catch (error) {

@@ -7,6 +7,7 @@ class OrderController {
     this.user = db.user;
     this.level = db.level;
     this.message = db.message;
+    this.sequelize = db.sequelize;
   }
 
   getOrder = async (req, res) => {
@@ -68,19 +69,23 @@ class OrderController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of orderID" });
     }
+    const t = this.sequelize.transaction();
     try {
       const order = await this.order.findByPk(orderId);
       if (order.status !== "Pending") {
         throw new Error("User have already paid this order");
       }
-      await order.update({ status: "Paid" });
+      await order.update({ status: "Paid" }, { transaction: t });
       const user = await this.user.findByPk(order.userId, {
         include: this.level,
       });
       const newPoints = user.points + order.amount;
-      await user.update({
-        points: newPoints,
-      });
+      await user.update(
+        {
+          points: newPoints,
+        },
+        { transaction: t }
+      );
       const levelInfo = await this.level.findAll({
         attributes: ["id", "requirement"],
         order: [["requirement", "DESC"]],
@@ -94,9 +99,11 @@ class OrderController {
         }
         prevId = id;
       }
-      user.save();
+      user.save({ transaction: t });
+      await t.commit();
       return res.json("Success");
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error.message });
     }
   };
@@ -115,6 +122,7 @@ class OrderController {
           .json({ error: true, msg: "Wrong Type of productID" });
       }
     }
+    const t = this.sequelize.transaction();
     try {
       const product = {};
       for (const id of productIdList) {
@@ -130,20 +138,28 @@ class OrderController {
       }
       for (const productDetail of productDetailList) {
         const newAmount = productDetail.stock - product[productDetail.id];
-        await productDetail.update({ stock: newAmount });
+        await productDetail.update({ stock: newAmount }, { transaction: t });
       }
-      const newOrder = await this.order.create({
-        address,
-        status: "Pending",
-        userId,
-        amount,
-      });
+      const newOrder = await this.order.create(
+        {
+          address,
+          status: "Pending",
+          userId,
+          amount,
+        },
+        { transaction: t }
+      );
       for (const [id, number] of Object.entries(product)) {
-        await newOrder.addProducts(id, { through: { amount: number } });
+        await newOrder.addProducts(id, {
+          through: { amount: number },
+          transaction: t,
+        });
       }
-      await this.cart.destroy({ where: { userId: userId } });
+      await this.cart.destroy({ where: { userId: userId }, transaction: t });
+      await t.commit();
       return res.json(newOrder.id);
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };

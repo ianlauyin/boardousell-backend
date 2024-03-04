@@ -5,6 +5,7 @@ class CategoryController {
     this.productPhoto = db.productPhoto;
     this.onsale = db.onsale;
     this.newproduct = db.newproduct;
+    this.sequelize = db.sequelize;
   }
 
   changeRelationWithProduct = async (req, res) => {
@@ -48,12 +49,15 @@ class CategoryController {
 
   deleteCategory = async (req, res) => {
     const { categoryId } = req.params;
+    const t = this.sequelize.transaction();
     try {
       const target = await this.category.findByPk(categoryId);
-      await target.setProducts([]);
-      await target.destroy();
+      await target.setProducts([], { transaction: t });
+      await target.destroy({ transaction: t });
+      await t.commit();
       return res.json("Deleted");
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };

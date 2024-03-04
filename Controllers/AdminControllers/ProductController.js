@@ -7,6 +7,7 @@ class ProductController {
     this.productPhoto = db.productPhoto;
     this.onsale = db.onsale;
     this.category = db.category;
+    this.sequelize = db.sequelize;
   }
 
   searchStock = async (req, res) => {
@@ -65,20 +66,27 @@ class ProductController {
         .status(400)
         .json({ error: true, msg: "Wrong type of discount" });
     }
+    const t = this.sequelize.transaction();
     try {
-      const product = await this.product.create(newProduct);
+      const product = await this.product.create(newProduct, { transaction: t });
       if (isNewProduct) {
-        await this.newproduct.create({ productId: product.id });
+        await this.newproduct.create(
+          { productId: product.id },
+          { transaction: t }
+        );
       }
       if (isOnsale) {
-        await this.onsale.create({ productId: product.id, discount });
+        await this.onsale.create(
+          { productId: product.id, discount },
+          { transaction: t }
+        );
       }
       const categoryInstances = [];
       for (const name of categories) {
         const category = await this.category.findOne({ where: { name: name } });
         categoryInstances.push(category);
       }
-      await product.setCategories(categoryInstances);
+      await product.setCategories(categoryInstances, { transaction: t });
       const data = await this.product.findByPk(product.id, {
         include: [
           this.productPhoto,
@@ -87,8 +95,10 @@ class ProductController {
           this.onsale,
         ],
       });
+      await t.commit();
       return res.json(data);
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };
@@ -221,6 +231,7 @@ class ProductController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of Photo Id" });
     }
+    const t = this.sequelize.transaction();
     try {
       const photo = await this.productPhoto.findByPk(photoId);
       const { productId } = photo;
@@ -228,15 +239,18 @@ class ProductController {
         { thumbnail: false },
         {
           where: { [Op.and]: [{ productId: productId }, { thumbnail: true }] },
+          transaction: t,
           returning: true,
         }
       );
       await this.productPhoto.update(
         { thumbnail: true },
-        { where: { id: photoId } }
+        { where: { id: photoId }, transaction: t }
       );
+      await t.commit();
       return res.json({ oldThumbnailPhotoId: oldThumbnail[1][0].id });
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };
@@ -248,6 +262,7 @@ class ProductController {
         .status(400)
         .json({ error: true, msg: "Wrong Type of Photo Id" });
     }
+    const t = this.sequelize.transaction();
     try {
       const target = await this.productPhoto.findByPk(photoId);
       const { productId } = target;
@@ -258,12 +273,14 @@ class ProductController {
           },
         });
         if (!!newThumbnail) {
-          await newThumbnail.update({ thumbnail: true });
+          await newThumbnail.update({ thumbnail: true }, { transaction: t });
         }
       }
-      await target.destroy();
+      await target.destroy({ transaction: t });
+      await t.commit();
       return res.json("Deleted");
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };

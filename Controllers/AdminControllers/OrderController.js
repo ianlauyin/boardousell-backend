@@ -5,6 +5,7 @@ class OrderController {
     this.product = db.product;
     this.user = db.user;
     this.message = db.message;
+    this.sequelize = db.sequelize;
   }
 
   searchOrder = async (req, res) => {
@@ -64,6 +65,28 @@ class OrderController {
       .json({ error: true, msg: "Currently not supporting your search type." });
   };
 
+  searchOrderDetail = async (limitation, searchObject, res) => {
+    try {
+      const count = await this.order.count({ where: searchObject });
+      const data = await this.order.findAll({
+        where: searchObject,
+        include: [
+          { model: this.user, attributes: { exclude: ["uuid"] } },
+          {
+            model: this.product,
+            through: { attributes: ["amount"] },
+          },
+          this.message,
+        ],
+        order: [["updatedAt", "DESC"]],
+        ...limitation,
+      });
+      return res.json({ count: count, data: data });
+    } catch (error) {
+      return res.status(400).json({ error: true, msg: error });
+    }
+  };
+
   searchProduct = async (page, limit, keyword, res) => {
     try {
       const allData = await this.order.findAll({
@@ -109,28 +132,6 @@ class OrderController {
     }
   };
 
-  searchOrderDetail = async (limitation, searchObject, res) => {
-    try {
-      const count = await this.order.count({ where: searchObject });
-      const data = await this.order.findAll({
-        where: searchObject,
-        include: [
-          { model: this.user, attributes: { exclude: ["uuid"] } },
-          {
-            model: this.product,
-            through: { attributes: ["amount"] },
-          },
-          this.message,
-        ],
-        order: [["updatedAt", "DESC"]],
-        ...limitation,
-      });
-      return res.json({ count: count, data: data });
-    } catch (error) {
-      return res.status(400).json({ error: true, msg: error });
-    }
-  };
-
   sortMessage = async (page, limit, order, res) => {
     if (!(order === "ASC" || order === "DESC")) {
       return res.status(400).json({ error: true, msg: "Wrong Message Order" });
@@ -170,6 +171,7 @@ class OrderController {
     if (!valid.includes(status)) {
       return res.status(400).json({ error: true, msg: "Wrong Status" });
     }
+    const t = this.sequelize.transaction();
     try {
       const order = await this.order.findByPk(orderId);
       if (status === "Cancelled" && order.status === "Cancelled") {
@@ -179,10 +181,10 @@ class OrderController {
         const products = await order.getProducts();
         for (const product of products) {
           product.stock += product.productorder.amount;
-          await product.save();
+          await product.save({ transaction: t });
         }
       }
-      await order.update({ status });
+      await order.update({ status }, { transaction: t });
       const data = await this.order.findByPk(orderId, {
         include: [
           { model: this.user, attributes: { exclude: ["uuid"] } },
@@ -190,8 +192,10 @@ class OrderController {
           this.message,
         ],
       });
+      await t.commit();
       return res.json(data);
     } catch (error) {
+      await t.rollback();
       return res.status(400).json({ error: true, msg: error });
     }
   };
